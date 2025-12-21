@@ -1,0 +1,28 @@
+/* Utilitaire pour cacher la scrollbar horizontalement */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Animation "Shine" pour le bouton */
+@keyframes shine {
+    100% {
+        transform: translateX(200%) skewX(-12deg);
+    }
+}
+.group-hover\:animate-shine:hover {
+    animation: shine 1.5s infinite;
+}
+
+/* Animation ajout panier */
+@keyframes pulseOnce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+.animate-pulse-once {
+    animation: pulseOnce 0.3s ease-in-out;
+}

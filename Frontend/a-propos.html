@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre Histoire | Sublime Haeven Côte d'Ivoire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { primary: '#10B981', dark: '#1F2937', light: '#F9FAFB' }, fontFamily: { sans: ['Inter', 'sans-serif'] } }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-light text-dark font-sans">
+
+    <nav class="bg-white shadow-sm py-4 sticky top-0 z-50 px-4 flex justify-between items-center">
+        <a href="index.html" class="font-extrabold text-xl tracking-tighter text-primary uppercase">SUBLIME<span class="text-dark">HAEVEN</span></a>
+        <a href="index.html" class="text-xs font-bold text-gray-500">Retour Boutique</a>
+    </nav>
+
+    <div class="max-w-2xl mx-auto bg-white min-h-screen">
+        
+        <div class="h-64 bg-gray-200 overflow-hidden relative">
+            <img src="https://placehold.co/800x600/10B981/FFFFFF?text=L'Equipe+Sublime+Haeven" class="w-full h-full object-cover opacity-90">
+            <div class="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/80 to-transparent w-full">
+                <h1 class="text-3xl font-extrabold text-white">Plus que des produits,<br>un style de vie.</h1>
+            </div>
+        </div>
+
+        <div class="p-8 prose prose-green text-gray-600 leading-relaxed">
+            <p class="font-bold text-lg text-dark">Bienvenue chez Sublime Haeven.</p>
+            
+            <p>Tout a commencé par un constat simple à Abidjan : il est difficile de trouver des produits de soins qui soient à la fois <strong>efficaces, sans danger pour la peau (non décapants) et abordables</strong>.</p>
+
+            <p>Fatigués de voir nos sœurs et mères abîmer leur peau avec des produits douteux, nous avons découvert la biotechnologie <strong>Longrich</strong>. Une révélation.</p>
+
+            <h3 class="font-bold text-dark text-xl mt-6 mb-2">Notre Mission</h3>
+            <p>Nous ne sommes pas de simples vendeurs. Nous sommes des <strong>Conseillers en Bien-être</strong>. Notre but n'est pas de vous vendre le produit le plus cher, mais le <em>Rituel</em> adapté à votre problème précis : acné, douleurs, fertilité ou hygiène.</p>
+
+            <div class="bg-green-50 p-6 rounded-xl my-8 border-l-4 border-primary italic">
+                "La vraie beauté, c'est une santé qui se voit à l'extérieur."
+            </div>
+
+            <h3 class="font-bold text-dark text-xl mt-6 mb-2">Nos Engagements</h3>
+            <ul class="space-y-3 mt-4">
+                <li class="flex items-start gap-3">
+                    <span class="text-green-500 font-bold">✓</span>
+                    <span><strong>Authenticité Garantie :</strong> Nous nous fournissons directement à la source. Aucun intermédiaire douteux.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-green-500 font-bold">✓</span>
+                    <span><strong>Accompagnement :</strong> Une fois votre commande reçue, nous restons disponibles sur WhatsApp pour vous guider dans l'utilisation.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-green-500 font-bold">✓</span>
+                    <span><strong>Transparence :</strong> Nos prix sont fixes, clairs et incluent notre expertise.</span>
+                </li>
+            </ul>
+
+            <div class="mt-10 pt-10 border-t border-gray-100 text-center">
+                <p class="mb-4 font-bold text-dark">Une question ? Un doute ?</p>
+                <a href="https://wa.me/2250700000000" class="inline-block bg-primary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-green-600 transition">
+                    Parler à un conseiller maintenant
+                </a>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-gray-400 text-center py-8 text-xs">
+            &copy; 2025 Sublime Haeven. Distributeur Indépendant.<br>Abidjan, Côte d'Ivoire.
+        </footer>
+    </div>
+</body>
+</html>

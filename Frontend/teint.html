@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sublime Haeven | Boutique Officielle</title>
+    
+    <title>Lait de Corps Éclaircissant et Unifiant Abidjan | Gamme Longrich</title>
+    <meta name="description" content="Découvrez le Rituel Peau Nette de Longrich. Éliminez boutons, acné et taches noires avec le Savon Noir Bambou et le Dentifrice Multi-action. Résultats visibles.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,9 +42,9 @@
 
     <nav class="bg-white shadow-sm py-4 sticky top-0 z-50">
         <div class="max-w-2xl mx-auto px-4 flex justify-between items-center">
-            <span class="font-extrabold text-xl tracking-tighter text-primary uppercase">
+            <a href="index.html" class="font-extrabold text-xl tracking-tighter text-primary uppercase">
                 SUBLIME<span class="text-dark">HAEVEN</span>
-            </span>
+            </a>
             <a href="#commande" class="relative text-sm font-bold text-accent flex items-center gap-1">
                 <span>Panier</span>
                 <span x-show="cart.length > 0" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full" x-text="cart.length + 1"></span>
@@ -73,33 +76,19 @@
     </header>
 
     <section class="bg-white py-10 px-4">
-        <div class="max-w-md mx-auto md:max-w-2xl"> <h2 class="text-2xl font-bold text-center mb-2">Le Protocole "Peau Neuve"</h2>
-            <p class="text-center text-gray-500 mb-8">Experts sélectionnés par Sublime Haeven</p>
-
-            <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                
+        <div class="max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-center mb-8">Votre Rituel Expert</h2>
+            <div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:w-0.5 before:bg-slate-200">
                 <template x-for="step in product.steps" :key="step.num">
-                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                        
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 font-bold z-10"
-                             :class="step.num === 1 ? 'bg-slate-300' : 'bg-primary'">
-                            <span x-text="step.num"></span>
-                        </div>
-                        
-                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border shadow relative transition hover:shadow-md"
-                             :class="step.isSecret ? 'bg-green-50 border-green-200' : 'bg-light border-slate-200'">
-                            
-                            <template x-if="step.isSecret">
-                                <span class="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-bl font-bold">SECRET</span>
-                            </template>
-                            
+                    <div class="relative flex items-center justify-between">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white shadow shrink-0 font-bold z-10" x-text="step.num"></div>
+                        <div class="w-[calc(100%-3.5rem)] bg-gray-50 p-4 rounded border shadow-sm relative">
+                            <span x-show="step.isSecret" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-bl font-bold">LE SECRET</span>
                             <div class="font-bold text-slate-900" x-text="step.name"></div>
                             <div class="text-slate-500 text-sm" x-text="step.desc"></div>
                         </div>
-
                     </div>
                 </template>
-
             </div>
         </div>
     </section>
@@ -133,17 +122,26 @@
         </div>
     </section>
 
+    <article class="bg-white py-12 px-4 border-t border-gray-100">
+        <div class="max-w-2xl mx-auto prose prose-green prose-sm text-gray-600">
+            <h2 class="text-xl font-bold text-dark text-center mb-4">Le Secret d'un Teint Lumineux sans danger</h2>
+            <p>De nombreuses solutions éclaircissantes (tchatcho) détruisent l'épiderme. Le Rituel Glow Longrich mise sur la réparation. Le Lait SOD (Super Oxyde Dismutase) utilise une enzyme naturelle pour protéger la peau des radicaux libres.</p>
+            <h3 class="font-bold text-dark mt-4">La technologie Micro-Billes</h3>
+            <p>Le gel douche contient des billes encapsulées qui libèrent leurs principes actifs uniquement au contact de la peau. Cela garantit une efficacité maximale pour unifier le teint et réduire les zones sombres (coudes, genoux) sans agresser.</p>
+        </div>
+    </article>
+
     <section class="bg-white py-10 px-4">
         <div class="max-w-2xl mx-auto">
-            <h3 class="text-xl font-bold text-center mb-6">Produits Complémentaires</h3>
+            <h3 class="text-xl font-bold text-center mb-6">Pour compléter votre routine</h3>
             <div class="flex overflow-x-auto space-x-4 pb-6 no-scrollbar snap-x snap-mandatory">
                 <template x-for="item in extraProducts" :key="item.id">
                     <div class="min-w-[170px] bg-white rounded-xl shadow p-3 snap-center flex flex-col justify-between border relative">
                         <div x-show="isInCart(item.id)" class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full z-10 shadow">✓</div>
-                        <img :src="item.img" class="rounded-lg mb-2 w-full h-24 object-cover">
+                        <img :src="item.img" class="rounded-lg mb-2 w-full h-24 object-contain">
                         <div>
                             <h4 class="font-bold text-xs" x-text="item.name"></h4>
-                            <p class="text-[10px] text-gray-500 leading-tight mt-1" x-text="item.desc"></p>
+                            <p class="text-[10px] text-gray-500 leading-tight mt-1" x-text="item.desc_short"></p>
                         </div>
                         <button @click="toggleCart(item)" :class="isInCart(item.id) ? 'bg-gray-100 text-gray-600' : 'bg-primary text-white'" class="w-full font-bold py-2 rounded mt-2 text-xs transition active:scale-95">
                             <span x-text="isInCart(item.id) ? 'Retirer' : 'Ajouter +'"></span>
@@ -232,10 +230,25 @@
                             <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </span>
                     </button>
-                    <p class="text-center text-xs text-gray-400 mt-3 flex justify-center items-center gap-1">
-                        <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        Paiement à la livraison • Satisfaction Garantie
-                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-2 py-4 mt-6 bg-gray-50 border border-gray-100 rounded-xl">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🚚</div>
+                            <h4 class="font-bold text-[10px] text-dark">Expédition 24H</h4>
+                            <p class="text-[9px] text-gray-400">Partout à Abidjan</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🤝</div>
+                            <h4 class="font-bold text-[10px] text-dark">Paiement Cash</h4>
+                            <p class="text-[9px] text-gray-400">À la livraison</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">💎</div>
+                            <h4 class="font-bold text-[10px] text-dark">Authentique</h4>
+                            <p class="text-[9px] text-gray-400">Certifié Longrich</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

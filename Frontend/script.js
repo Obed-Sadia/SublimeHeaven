@@ -5,26 +5,26 @@ document.addEventListener('alpine:init', () => {
         
         // Données dynamiques
         activeHeroSlide: 0,
-        
-        // CATALOGUE ADDITIONNEL (Reste le même pour tout le monde)
-        extraProducts: [
-            { id: 'lait_sod', name: 'Lait Corps SOD', price: 5500, desc: 'Hydrate et unifie le teint', img: 'https://placehold.co/150x150?text=Lait+SOD' },
-            { id: 'spray_moustique', name: 'Parfum Anti-Moustiques', price: 4500, desc: 'Protection 8h & Parfum frais', img: 'https://placehold.co/150x150?text=Anti-Moustique' },
-            { id: 'gel_mains', name: 'Gel Mains', price: 4500, desc: 'Désinfectant doux & hydratant', img: 'https://placehold.co/150x150?text=Gel+Mains' },
-            { id: 'spray_bouche', name: 'Senteur Bouche', price: 3500, desc: 'Haleine fraîche instantanée', img: 'https://placehold.co/150x150?text=Spray+Bouche' }
-        ],
-
         cart: [],
         customer: { name: '', phone: '', city: '' },
 
+        // LOGIQUE CROSS-SELLING INTELLIGENTE
+        // Ne montre que les produits définis dans "suggestions" dans data.js
+        get extraProducts() {
+            if (!this.product || !this.product.suggestions) {
+                // Fallback : retourne les 4 premiers produits si pas de suggestions
+                return diverseProducts.slice(0, 4);
+            }
+            // Filtre la grande liste diverseProducts pour trouver les suggestions
+            return diverseProducts.filter(item => this.product.suggestions.includes(item.id));
+        },
+
         init() {
-            // Sécurité : si la clé produit n'existe pas, on redirige ou on met une erreur
             if (!this.product) {
                 console.error("Produit non trouvé : " + productKey);
                 return;
             }
-            
-            // Slider auto
+            // Slider auto pour le hero
             setInterval(() => {
                 this.activeHeroSlide = (this.activeHeroSlide + 1) % this.product.heroSlides.length;
             }, 3500);
@@ -59,11 +59,11 @@ document.addEventListener('alpine:init', () => {
             msg += `📞 *Tel:* ${this.customer.phone}\n`;
             msg += `📍 *Ville:* ${this.customer.city}\n`;
             msg += `___________________\n`;
-            msg += `📦 *PRODUIT PRINCIPAL:*\n`;
+            msg += `📦 *RITUEL CHOISI:*\n`;
             msg += `👉 ${this.product.badge} (${this.formatPrice(this.product.price)} F)\n`;
             
             if (this.cart.length > 0) {
-                msg += `\n🛒 *AJOUTS:*\n`;
+                msg += `\n🛒 *PRODUITS AJOUTÉS:*\n`;
                 this.cart.forEach(item => {
                     msg += `➕ ${item.name} (${this.formatPrice(item.price)} F)\n`;
                 });
@@ -73,7 +73,7 @@ document.addEventListener('alpine:init', () => {
             msg += `💰 *TOTAL: ${this.formatPrice(this.total)} FCFA*\n`;
             msg += `🚚 Paiement à la livraison`;
 
-            let whatsappNumber = '2250700000000'; // TON NUMERO
+            let whatsappNumber = '2250700000000'; // TON NUMERO ICI
             window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
         }
     }))

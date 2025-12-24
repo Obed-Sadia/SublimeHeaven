@@ -248,3 +248,10 @@ const deliveryZones = [
     { id: 'abidjan_ouest', name: 'Abidjan Ouest (Yopougon, Abobo)', price: 2000 },
     { id: 'interieur', name: 'Expédition Intérieur (San Pedro, Yamoussoukro...)', price: 3000 }
 ];
+
+// --- 3. CONFIGURATION DES CODES PROMO ---
+const activePromoCodes = {
+    'BIENVENUE': { type: 'percent', value: 10 }, // -10%
+    'VIP2000':   { type: 'fixed', value: 2000 }, // -2000 FCFA
+    'LIVRAISON': { type: 'fixed', value: 1000 }  // -1000 FCFA
+};

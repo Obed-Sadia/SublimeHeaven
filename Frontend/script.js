@@ -38,12 +38,18 @@ initMarketing();
 // --- LOGIQUE ALPINE JS ---
 document.addEventListener('alpine:init', () => {
     
-    // 1. Outils de base (Fonctions simples et Données)
+    // 1. Outils de base
     const commonLogic = {
         zones: deliveryZones,
         selectedZoneId: deliveryZones[0].id, 
         cart: [],
         customer: { name: '', phone: '', city: '' },
+        
+        // VARIABLES PROMO
+        promoInput: '',
+        appliedPromo: null, 
+        promoMessage: '',
+        promoError: false,
 
         isInCart(id) { return this.cart.some(item => item.id === id); },
 
@@ -56,6 +62,29 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        // LOGIQUE D'APPLICATION DU CODE
+        applyPromo() {
+            // On nettoie l'entrée (majuscule, sans espace)
+            const code = this.promoInput.trim().toUpperCase();
+            
+            if (!code) { 
+                this.promoMessage = ''; 
+                return; 
+            }
+
+            // activePromoCodes vient maintenant de data.js !
+            if (typeof activePromoCodes !== 'undefined' && activePromoCodes[code]) {
+                const rule = activePromoCodes[code];
+                this.appliedPromo = { code: code, rule: rule };
+                this.promoError = false;
+                this.promoMessage = "Code appliqué avec succès ! 🎉";
+            } else {
+                this.appliedPromo = null;
+                this.promoError = true;
+                this.promoMessage = "Ce code n'est pas valide 😢";
+            }
+        },
+
         formatPrice(price) { return new Intl.NumberFormat('fr-FR').format(price); },
 
         generateWhatsappMsg(type, productTitle = null, productPrice = 0) {
@@ -64,7 +93,7 @@ document.addEventListener('alpine:init', () => {
             msg += `👤 *Nom:* ${this.customer.name}\n`;
             msg += `📞 *Tel:* ${this.customer.phone}\n`;
             msg += `📍 *Lieu:* ${this.customer.city}\n`;
-            msg += `🚚 *Zone:* ${this.activeZone.name}\n`; 
+            msg += `🚚 *Zone:* ${this.activeZone.name}\n`;
             msg += `___________________\n`;
             
             if (productTitle) {
@@ -79,6 +108,12 @@ document.addEventListener('alpine:init', () => {
             }
             
             msg += `🛵 *LIVRAISON:* ${this.formatPrice(this.activeZone.price)} F\n`;
+            
+            // Ligne Promo dans le message
+            if (this.appliedPromo) {
+                msg += `🎁 *CODE PROMO (${this.appliedPromo.code}):* -${this.formatPrice(this.discountAmount)} F\n`;
+            }
+
             msg += `___________________\n`;
             msg += `💰 *TOTAL À PAYER: ${this.formatPrice(this.total)} FCFA*\n`;
             return msg;
@@ -96,7 +131,7 @@ document.addEventListener('alpine:init', () => {
                 num_items: (this.cart.length + (this.product ? 1 : 0))
             });
 
-            let whatsappNumber = '2250700000000'; 
+            let whatsappNumber = '2250700000000'; // TON NUMERO
             
             setTimeout(() => {
                 window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
@@ -104,31 +139,35 @@ document.addEventListener('alpine:init', () => {
         }
     };
 
-    // 2. LOGIQUE PAGES RITUELS (Avec les calculs intégrés ICI)
+    // 2. LOGIQUE PAGES RITUELS
     Alpine.data('shopLogic', (productKey) => ({
         ...commonLogic,
         product: productsData[productKey],
         activeHeroSlide: 0,
 
-        // --- CALCULS INTELLIGENTS (Doivent être ici pour rester dynamiques) ---
-        get activeZone() {
-            return this.zones.find(z => z.id === this.selectedZoneId) || this.zones[0];
-        },
+        get activeZone() { return this.zones.find(z => z.id === this.selectedZoneId) || this.zones[0]; },
 
         get subtotal() {
             let cartTotal = this.cart.reduce((sum, item) => sum + item.price, 0);
             return this.product ? (this.product.price + cartTotal) : cartTotal;
         },
 
+        get discountAmount() {
+            if (!this.appliedPromo) return 0;
+            if (this.appliedPromo.rule.type === 'fixed') return this.appliedPromo.rule.value;
+            if (this.appliedPromo.rule.type === 'percent') return Math.round(this.subtotal * (this.appliedPromo.rule.value / 100));
+            return 0;
+        },
+
         get total() { 
-            return this.subtotal + this.activeZone.price; 
+            let t = this.subtotal + this.activeZone.price - this.discountAmount; 
+            return t > 0 ? t : 0;
         },
 
         get extraProducts() {
             if (!this.product || !this.product.suggestions) return diverseProducts.slice(0, 4);
             return diverseProducts.filter(item => this.product.suggestions.includes(item.id));
         },
-        // ----------------------------------------------------------------------
 
         init() {
             if (!this.product) return;
@@ -142,31 +181,33 @@ document.addEventListener('alpine:init', () => {
         }
     }));
 
-    // 3. LOGIQUE BOUTIQUE 
+    // 3. LOGIQUE BOUTIQUE
     Alpine.data('shopAll', () => ({
         ...commonLogic,
         items: diverseProducts,
         activeProduct: null,
         filter: 'Tout',
         
-        // --- CALCULS INTELLIGENTS BOUTIQUE ---
-        get activeZone() {
-            return this.zones.find(z => z.id === this.selectedZoneId) || this.zones[0];
+        get activeZone() { return this.zones.find(z => z.id === this.selectedZoneId) || this.zones[0]; },
+
+        get subtotal() { return this.cart.reduce((sum, item) => sum + item.price, 0); },
+        
+        get discountAmount() {
+            if (!this.appliedPromo) return 0;
+            if (this.appliedPromo.rule.type === 'fixed') return this.appliedPromo.rule.value;
+            if (this.appliedPromo.rule.type === 'percent') return Math.round(this.subtotal * (this.appliedPromo.rule.value / 100));
+            return 0;
         },
 
-        get subtotal() { 
-            return this.cart.reduce((sum, item) => sum + item.price, 0); 
-        },
-        
         get total() { 
-            return this.subtotal + this.activeZone.price; 
+            let t = this.subtotal + this.activeZone.price - this.discountAmount;
+            return t > 0 ? t : 0;
         },
 
         get filteredItems() {
             if (this.filter === 'Tout') return this.items;
             return this.items.filter(i => i.category === this.filter);
         },
-        // -------------------------------------
 
         submitOrder() {
             if (this.cart.length === 0) { alert('⚠️ Panier vide'); return; }

@@ -208,6 +208,26 @@
                             <span x-text="formatPrice(item.price)"></span>
                         </div>
                     </template>
+
+                    <div class="mt-4 mb-4 pt-4 border-t border-gray-100">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Avez-vous un code promo ?</label>
+                        <div class="flex gap-2">
+                            <input x-model="promoInput" type="text" placeholder="Entrez le code ici" 
+                                class="flex-1 bg-white border border-gray-200 rounded px-3 py-2 text-xs uppercase focus:ring-1 focus:ring-primary focus:outline-none">
+                            <button @click="applyPromo()" class="bg-gray-800 text-white text-[10px] font-bold px-3 py-2 rounded hover:bg-black transition">
+                                OK
+                            </button>
+                        </div>
+                        
+                        <p x-show="promoMessage" x-text="promoMessage" 
+                        :class="promoError ? 'text-red-500' : 'text-green-600'" 
+                        class="text-[10px] font-bold mt-1"></p>
+                        
+                        <div x-show="appliedPromo" class="flex justify-between items-center mt-2 text-green-600 text-xs font-bold bg-green-50 p-2 rounded border border-green-100">
+                            <span>Réduction appliquée :</span>
+                            <span x-text="'- ' + formatPrice(discountAmount) + ' F'"></span>
+                        </div>
+                    </div>
                     
                     <div class="border-t border-gray-200 mt-3 pt-3">
                         <div class="flex justify-between items-center mb-2 text-gray-500 text-xs">
@@ -282,6 +302,33 @@
             </div>
         </div>
     </section>
+
+    <footer class="bg-dark text-gray-400 py-10 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            <div>
+                <span class="font-extrabold text-white text-lg uppercase tracking-tighter">SUBLIME<span class="text-primary">HAEVEN</span></span>
+                <p class="mt-4 leading-relaxed">Votre destination pour des soins dermo-cosmétiques authentiques et efficaces. Nous livrons le bien-être à votre porte.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Liens Rapides</h4>
+                <ul class="space-y-2">
+                    <li><a href="visage.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins Visage</a></li>
+                    <li><a href="teint.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins du Corps</a></li>
+                    <li><a href="cheveux.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Traitement Cheveux</a></li>
+                    <li><a href="douleur.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Anti-Douleurs</a></li>
+                    <li><a href="boutique.html" class="hover:text-primary transition flex items-center gap-2 text-accent font-bold"><span>★</span> La Boutique Complète</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contact</h4>
+                <p>Abidjan, Côte d'Ivoire</p>
+                <p class="mt-2">Tel: +225 07 00 00 00 00</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-xs">
+            &copy; 2025 Sublime Haeven. Distributeur Indépendant agréé Longrich. Tous droits réservés.
+        </div>
+    </footer>
 
 </body>
 </html>

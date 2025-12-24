@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Traitement Anti-Acné et Taches Noires Abidjan | Rituel Longrich</title>
-    <meta name="description" content="Découvrez le Rituel Peau Nette de Longrich. Éliminez boutons, acné et taches noires avec le Savon Noir Bambou et le Dentifrice Multi-action. Résultats visibles.">
+    <title>Traitement Cheveux Durs et Casse Abidjan | Rituel Longrich</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -192,6 +190,7 @@
             
             <div class="p-6 space-y-4">
                 <div class="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
+                    
                     <div class="flex justify-between items-center border-b border-gray-200 pb-3 mb-3">
                         <div>
                             <span class="font-bold text-sm block text-gray-800" x-text="product.badge"></span>
@@ -210,9 +209,30 @@
                         </div>
                     </template>
                     
-                    <div class="flex justify-between items-end font-extrabold text-xl text-primary mt-3 pt-3 border-t border-gray-300">
-                        <span class="text-sm text-gray-500 font-normal">Total à payer :</span>
-                        <span x-text="formatPrice(total) + ' FCFA'"></span>
+                    <div class="border-t border-gray-200 mt-3 pt-3">
+                        <div class="flex justify-between items-center mb-2 text-gray-500 text-xs">
+                            <span>Sous-total produits :</span>
+                            <span x-text="formatPrice(subtotal) + ' F'"></span>
+                        </div>
+
+                        <div class="mb-3 bg-white p-2 rounded border border-gray-200">
+                            <label class="block text-[10px] font-bold text-dark mb-1 uppercase tracking-wide">
+                                📍 Où doit-on livrer ?
+                            </label>
+                            <select x-model="selectedZoneId" class="w-full bg-transparent font-bold text-xs text-dark focus:outline-none">
+                                <template x-for="zone in zones" :key="zone.id">
+                                    <option :value="zone.id" x-text="zone.name + ' (+' + zone.price + ' F)'"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <div class="flex justify-between items-end font-extrabold text-xl text-primary mt-3 pt-3 border-t border-gray-300">
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500 font-normal">Total à payer :</span>
+                                <span class="text-[10px] text-gray-400 font-normal" x-text="'(Livraison: ' + activeZone.price + ' F)'"></span>
+                            </div>
+                            <span x-text="formatPrice(total) + ' FCFA'"></span>
+                        </div>
                     </div>
                 </div>
 

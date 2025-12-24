@@ -104,7 +104,6 @@ const productsData = {
 };
 
 // --- CATALOGUE BOUTIQUE (PRODUITS DIVERS) ---
-// Données extraites du fichier PDF fourni
 
 const diverseProducts = [
     { 
@@ -233,4 +232,19 @@ const diverseProducts = [
         desc_short: 'Teint uniforme.',
         desc_long: 'Enrichi en micro-billes nourrissantes. Aide à réduire les taches, atténuer les imperfections et améliorer l\'éclat du teint.'
     }
+];
+
+// --- 1. CONFIGURATION MARKETING (PLUG & PLAY) ---
+const marketingConfig = {
+    facebookPixelId: "TON_ID_FACEBOOK_ICI", 
+    tiktokPixelId: "", 
+    currency: "XOF" 
+};
+
+// --- 2. CONFIGURATION LIVRAISON ---
+const deliveryZones = [
+    { id: 'abidjan_nord', name: 'Abidjan Nord (Cocody, Riviera, Bingerville)', price: 1000 },
+    { id: 'abidjan_sud', name: 'Abidjan Sud (Marcory, Treichville, Koumassi)', price: 1500 },
+    { id: 'abidjan_ouest', name: 'Abidjan Ouest (Yopougon, Abobo)', price: 2000 },
+    { id: 'interieur', name: 'Expédition Intérieur (San Pedro, Yamoussoukro...)', price: 3000 }
 ];

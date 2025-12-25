@@ -8,7 +8,7 @@ const productsData = {
     // --- LES RITUELS SIGNATURES (Landing Pages) ---
 
     'visage': {
-        db_id: KI001,
+        db_id: "KI001",
         title: "Fini les boutons masqués sous le maquillage.",
         subtitle: "Le Rituel Expert pour assécher les boutons et effacer les taches sans agresser.",
         badge: "Best-Seller Anti-Acné",
@@ -36,7 +36,7 @@ const productsData = {
     },
 
     'teint': {
-        db_id: KI002,
+        db_id: "KI002",
         title: "Révélez votre lumière naturelle.",
         subtitle: "Unifiez votre teint et éliminez les zones ternes avec la technologie Micro-billes.",
         badge: "Teint Lumineux & Uniforme",
@@ -63,7 +63,7 @@ const productsData = {
     },
 
     'douleur': {
-        db_id: KI003,
+        db_id: "KI003",
         title: "Retrouvez votre liberté de mouvement.",
         subtitle: "La solution puissante contre les rhumatismes, l'arthrose et les douleurs musculaires.",
         badge: "Soulagement Immédiat",
@@ -88,7 +88,7 @@ const productsData = {
     },
 
     'cheveux': {
-        db_id: KI004,
+        db_id: "KI004",
         title: "Transformez vos cheveux durs en soie.",
         subtitle: "La routine réparatrice pour stopper la casse et activer la pousse.",
         badge: "Spécial Cheveux Afro/Secs",

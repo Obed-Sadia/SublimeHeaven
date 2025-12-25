@@ -1,7 +1,14 @@
+// --- 0. CONFIGURATION SUPABASE ---
+const supabaseConfig = {
+    url: "https://nvhitmcdxshnofrukqqz.supabase.co", 
+    key: "sb_publishable_TI-FsqgeAWvMW67mPGGQeQ_GDEHeEfe"
+};
+
 const productsData = {
     // --- LES RITUELS SIGNATURES (Landing Pages) ---
 
     'visage': {
+        db_id: KI001,
         title: "Fini les boutons masqués sous le maquillage.",
         subtitle: "Le Rituel Expert pour assécher les boutons et effacer les taches sans agresser.",
         badge: "Best-Seller Anti-Acné",
@@ -29,6 +36,7 @@ const productsData = {
     },
 
     'teint': {
+        db_id: KI002,
         title: "Révélez votre lumière naturelle.",
         subtitle: "Unifiez votre teint et éliminez les zones ternes avec la technologie Micro-billes.",
         badge: "Teint Lumineux & Uniforme",
@@ -55,6 +63,7 @@ const productsData = {
     },
 
     'douleur': {
+        db_id: KI003,
         title: "Retrouvez votre liberté de mouvement.",
         subtitle: "La solution puissante contre les rhumatismes, l'arthrose et les douleurs musculaires.",
         badge: "Soulagement Immédiat",
@@ -79,6 +88,7 @@ const productsData = {
     },
 
     'cheveux': {
+        db_id: KI004,
         title: "Transformez vos cheveux durs en soie.",
         subtitle: "La routine réparatrice pour stopper la casse et activer la pousse.",
         badge: "Spécial Cheveux Afro/Secs",
@@ -108,6 +118,7 @@ const productsData = {
 const diverseProducts = [
     { 
         id: 'dentifrice', 
+        db_id: 'PR001', // Série PR
         name: 'Pâte Dentifrice Multi-Action', 
         price: 4500, 
         category: 'Hygiène',
@@ -117,6 +128,7 @@ const diverseProducts = [
     },
     { 
         id: 'lait_sod', 
+        db_id: 'PR002',
         name: 'Lait Corps SOD', 
         price: 5500, 
         category: 'Corps',
@@ -126,6 +138,7 @@ const diverseProducts = [
     },
     { 
         id: 'gel_mains', 
+        db_id: 'PR003',
         name: 'Gel Mains Désinfectant', 
         price: 4500, 
         category: 'Hygiène',
@@ -134,16 +147,8 @@ const diverseProducts = [
         desc_long: 'Élimine 99.9% des bactéries tout en gardant les mains douces et hydratées. Texture légère et non collante.'
     },
     { 
-        id: 'anti_moustique', 
-        name: 'Parfum Anti-Moustiques', 
-        price: 4500, 
-        category: 'Santé',
-        img: 'https://placehold.co/300x300?text=Anti-Moustique',
-        desc_short: 'Protection 8h & Parfum frais.',
-        desc_long: 'Spray parfumé qui combine protection contre les moustiques (jusqu\'à 8h) et parfum agréable. Ne colle pas et n\'irrite pas la peau.'
-    },
-    { 
         id: 'gel_douche', 
+        db_id: 'PR004',
         name: 'Gel Douche aux Herbes', 
         price: 5000, 
         category: 'Corps',
@@ -153,6 +158,7 @@ const diverseProducts = [
     },
     { 
         id: 'shampoing_the', 
+        db_id: 'PR005',
         name: 'Shampoing Thé Blanc', 
         price: 5000, 
         category: 'Cheveux',
@@ -162,6 +168,7 @@ const diverseProducts = [
     },
     { 
         id: 'shampoing_2en1', 
+        db_id: 'PR006',
         name: 'Shampoing 2 en 1 Traitant', 
         price: 7500, 
         category: 'Cheveux',
@@ -170,34 +177,8 @@ const diverseProducts = [
         desc_long: 'Idéal pour cheveux durs, secs ou cassants. Nettoie et répare en une seule étape. Rend les cheveux souples et faciles à coiffer.'
     },
     { 
-        id: 'huile_serpent_80', 
-        name: 'Huile de Serpent (80ml)', 
-        price: 5500, 
-        category: 'Santé',
-        img: 'https://placehold.co/300x300?text=Huile+Serpent',
-        desc_short: 'Douleurs & Cicatrisation.',
-        desc_long: 'Huile polyvalente. Soulage douleurs musculaires, régénère la peau, réduit cicatrices et vergetures.'
-    },
-    { 
-        id: 'huile_serpent_120', 
-        name: 'Huile de Serpent (120ml)', 
-        price: 6000, 
-        category: 'Santé',
-        img: 'https://placehold.co/300x300?text=Huile+Serpent+120',
-        desc_short: 'Grand format Multi-usages.',
-        desc_long: 'Le format familial. Idéal pour les cheveux (pousse, pellicules) et les douleurs articulaires. Améliore la circulation sanguine.'
-    },
-    { 
-        id: 'creme_douleur', 
-        name: 'Crème Anti-douleur', 
-        price: 3000, 
-        category: 'Santé',
-        img: 'https://placehold.co/300x300?text=Creme+Douleur',
-        desc_short: 'Soulagement rapide.',
-        desc_long: 'Crème apaisante pour soulager rapidement les douleurs musculaires et articulaires. Sensation de chaleur/fraîcheur immédiate.'
-    },
-    { 
         id: 'spray_bouche', 
+        db_id: 'PR007',
         name: 'Senteur Bouche Spray', 
         price: 3500, 
         category: 'Hygiène',
@@ -207,6 +188,7 @@ const diverseProducts = [
     },
     { 
         id: 'huile_bain', 
+        db_id: 'PR008',
         name: 'Huile de Bain Relaxante', 
         price: 12000, 
         category: 'Corps',
@@ -216,6 +198,7 @@ const diverseProducts = [
     },
     { 
         id: 'creme_mains', 
+        db_id: 'PR009',
         name: 'Crème Mains Réparatrice', 
         price: 5000, 
         category: 'Corps',
@@ -225,21 +208,64 @@ const diverseProducts = [
     },
     { 
         id: 'gel_eclaircissant', 
+        db_id: 'PR010',
         name: 'Gel Éclaircissant Billes', 
         price: 8500, 
         category: 'Corps',
         img: 'https://placehold.co/300x300?text=Gel+Eclaircissant',
         desc_short: 'Teint uniforme.',
         desc_long: 'Enrichi en micro-billes nourrissantes. Aide à réduire les taches, atténuer les imperfections et améliorer l\'éclat du teint.'
+    },
+    { 
+        id: 'huile_serpent_80', 
+        db_id: 'PR011',
+        name: 'Huile de Serpent (80ml)', 
+        price: 5500, 
+        category: 'Santé',
+        img: 'https://placehold.co/300x300?text=Huile+Serpent',
+        desc_short: 'Douleurs & Cicatrisation.',
+        desc_long: 'Huile polyvalente. Soulage douleurs musculaires, régénère la peau, réduit cicatrices et vergetures.'
+    },
+    { 
+        id: 'huile_serpent_120', 
+        db_id: 'PR012',
+        name: 'Huile de Serpent (120ml)', 
+        price: 6000, 
+        category: 'Santé',
+        img: 'https://placehold.co/300x300?text=Huile+Serpent+120',
+        desc_short: 'Grand format Multi-usages.',
+        desc_long: 'Le format familial. Idéal pour les cheveux (pousse, pellicules) et les douleurs articulaires. Améliore la circulation sanguine.'
+    },
+    { 
+        id: 'creme_douleur', 
+        db_id: 'PR013',
+        name: 'Crème Anti-douleur', 
+        price: 3000, 
+        category: 'Santé',
+        img: 'https://placehold.co/300x300?text=Creme+Douleur',
+        desc_short: 'Soulagement rapide.',
+        desc_long: 'Crème apaisante pour soulager rapidement les douleurs musculaires et articulaires. Sensation de chaleur/fraîcheur immédiate.'
+    },
+    { 
+        id: 'anti_moustique',
+        db_id: 'PR014', 
+        name: 'Parfum Anti-Moustiques', 
+        price: 4500, 
+        category: 'Santé',
+        img: 'https://placehold.co/300x300?text=Anti-Moustique',
+        desc_short: 'Protection 8h & Parfum frais.',
+        desc_long: 'Spray parfumé qui combine protection contre les moustiques (jusqu\'à 8h) et parfum agréable. Ne colle pas et n\'irrite pas la peau.'
     }
 ];
 
 // --- 1. CONFIGURATION MARKETING (PLUG & PLAY) ---
 const marketingConfig = {
-    facebookPixelId: "TON_ID_FACEBOOK_ICI", 
+    facebookPixelId: "1275911894302778", 
     tiktokPixelId: "", 
     currency: "XOF" 
 };
+
+
 
 // --- 2. CONFIGURATION LIVRAISON ---
 const deliveryZones = [

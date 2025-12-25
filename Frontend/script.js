@@ -1,3 +1,12 @@
+// --- INITIALISATION SUPABASE ---
+// On utilise 'supabaseClient' pour éviter les conflits de noms
+let supabaseClient = null;
+if (typeof supabaseConfig !== 'undefined' && typeof window.supabase !== 'undefined') {
+    supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.key);
+} else {
+    console.error("⚠️ Supabase non configuré ou librairie manquante.");
+}
+
 // --- GESTION MARKETING (PIXELS) ---
 function initMarketing() {
     if (typeof marketingConfig !== 'undefined' && marketingConfig.facebookPixelId) {
@@ -38,18 +47,40 @@ initMarketing();
 // --- LOGIQUE ALPINE JS ---
 document.addEventListener('alpine:init', () => {
     
-    // 1. Outils de base
+    // 1. Outils de base partagés
     const commonLogic = {
         zones: deliveryZones,
         selectedZoneId: deliveryZones[0].id, 
         cart: [],
         customer: { name: '', phone: '', city: '' },
+        isSubmitting: false, 
         
+        // NOUVEAU : Source du trafic (UTM)
+        trafficSource: 'Site Web (Organique)',
+
         // VARIABLES PROMO
         promoInput: '',
         appliedPromo: null, 
         promoMessage: '',
         promoError: false,
+
+        // --- FONCTION DETECTION SOURCE (UTM) ---
+        detectSource() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // On cherche ?source=... ou ?utm_source=...
+            const source = urlParams.get('source') || urlParams.get('utm_source');
+            
+            if (source) {
+                // Si trouvé, on met à jour et on sauvegarde
+                this.trafficSource = source;
+                sessionStorage.setItem('saved_source', source);
+            } else {
+                // Sinon, on regarde si on l'avait déjà sauvegardé
+                const saved = sessionStorage.getItem('saved_source');
+                if (saved) this.trafficSource = saved;
+            }
+            console.log("Source détectée :", this.trafficSource);
+        },
 
         isInCart(id) { return this.cart.some(item => item.id === id); },
 
@@ -62,17 +93,10 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        // LOGIQUE D'APPLICATION DU CODE
         applyPromo() {
-            // On nettoie l'entrée (majuscule, sans espace)
             const code = this.promoInput.trim().toUpperCase();
-            
-            if (!code) { 
-                this.promoMessage = ''; 
-                return; 
-            }
+            if (!code) { this.promoMessage = ''; return; }
 
-            // activePromoCodes vient maintenant de data.js !
             if (typeof activePromoCodes !== 'undefined' && activePromoCodes[code]) {
                 const rule = activePromoCodes[code];
                 this.appliedPromo = { code: code, rule: rule };
@@ -88,54 +112,93 @@ document.addEventListener('alpine:init', () => {
         formatPrice(price) { return new Intl.NumberFormat('fr-FR').format(price); },
 
         generateWhatsappMsg(type, productTitle = null, productPrice = 0) {
-            let msg = `*NOUVELLE COMMANDE ${type}* 🚀\n`;
-            msg += `___________________\n`;
-            msg += `👤 *Nom:* ${this.customer.name}\n`;
-            msg += `📞 *Tel:* ${this.customer.phone}\n`;
-            msg += `📍 *Lieu:* ${this.customer.city}\n`;
-            msg += `🚚 *Zone:* ${this.activeZone.name}\n`;
-            msg += `___________________\n`;
+            let msg = `*NOUVELLE COMMANDE ${type}* 🚀\n___________________\n`;
+            msg += `👤 *Nom:* ${this.customer.name}\n📞 *Tel:* ${this.customer.phone}\n📍 *Lieu:* ${this.customer.city}\n`;
+            msg += `🚚 *Zone:* ${this.activeZone.name}\n___________________\n`;
             
             if (productTitle) {
                 msg += `📦 *PRINCIPAL:* ${productTitle} (${this.formatPrice(productPrice)} F)\n`;
             }
-
             if (this.cart.length > 0) {
                 msg += `🛒 *PANIER AJOUTÉ:*\n`;
                 this.cart.forEach(item => {
                     msg += `➕ ${item.name} (${this.formatPrice(item.price)} F)\n`;
                 });
             }
-            
             msg += `🛵 *LIVRAISON:* ${this.formatPrice(this.activeZone.price)} F\n`;
-            
-            // Ligne Promo dans le message
             if (this.appliedPromo) {
                 msg += `🎁 *CODE PROMO (${this.appliedPromo.code}):* -${this.formatPrice(this.discountAmount)} F\n`;
             }
-
-            msg += `___________________\n`;
-            msg += `💰 *TOTAL À PAYER: ${this.formatPrice(this.total)} FCFA*\n`;
+            msg += `___________________\n💰 *TOTAL À PAYER: ${this.formatPrice(this.total)} FCFA*\n`;
             return msg;
         },
 
-        sendOrder(msg, totalValue) {
+        // --- FONCTION D'ENVOI (SUPABASE + WHATSAPP) ---
+        async sendOrder(msg, totalValue, mainProduct = null) {
              if (!this.customer.name || !this.customer.phone) {
                 alert('⚠️ Merci d\'indiquer votre Nom et Numéro.');
                 return;
             }
 
+            this.isSubmitting = true;
+
+            // 1. Préparer les données pour Supabase
+            let orderRows = [];
+            const timestamp = new Date().toISOString();
+
+            // Si on est sur une page "Rituel" (produit principal)
+            if (mainProduct && mainProduct.db_id) {
+                orderRows.push({
+                    created_at: timestamp,
+                    customer_phone: this.customer.phone,
+                    product_id: mainProduct.db_id,
+                    quantity_sold: 1,
+                    total_amount_cfa: mainProduct.price,
+                    marketing_source: this.trafficSource, // <--- SOURCE DYNAMIQUE
+                    status: "En attente Web"
+                });
+            }
+
+            // Ajouter les articles du panier
+            this.cart.forEach(item => {
+                if (item.db_id) {
+                    orderRows.push({
+                        created_at: timestamp,
+                        customer_phone: this.customer.phone,
+                        product_id: item.db_id,
+                        quantity_sold: 1,
+                        total_amount_cfa: item.price,
+                        marketing_source: this.trafficSource + " (Panier)", // <--- SOURCE DYNAMIQUE
+                        status: "En attente Web"
+                    });
+                }
+            });
+
+            // 2. Envoyer à Supabase (si configuré)
+            if (supabaseClient && orderRows.length > 0) {
+                try {
+                    const { error } = await supabaseClient.from('orders').insert(orderRows);
+                    if (error) console.error("Erreur Supabase:", error);
+                    else console.log("Commande enregistrée dans le Cloud ! Source:", this.trafficSource);
+                } catch (e) {
+                    console.error("Erreur connexion:", e);
+                }
+            }
+
+            // 3. Tracking Pixel
             trackEvent('Purchase', { 
                 value: totalValue, 
                 currency: marketingConfig.currency,
-                num_items: (this.cart.length + (this.product ? 1 : 0))
+                num_items: (this.cart.length + (mainProduct ? 1 : 0))
             });
 
-            let whatsappNumber = '2250700000000'; // TON NUMERO
+            // 4. Redirection WhatsApp
+            let whatsappNumber = '+22506394798'; // Ton Numéro
             
             setTimeout(() => {
                 window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
-            }, 300);
+                this.isSubmitting = false;
+            }, 500); 
         }
     };
 
@@ -170,6 +233,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         init() {
+            this.detectSource(); // Détecter d'où vient le client
             if (!this.product) return;
             trackEvent('ViewContent', { content_name: this.product.title, value: this.product.price, currency: marketingConfig.currency });
             setInterval(() => { this.activeHeroSlide = (this.activeHeroSlide + 1) % this.product.heroSlides.length; }, 3500);
@@ -177,11 +241,11 @@ document.addEventListener('alpine:init', () => {
 
         submitOrder() {
             let msg = this.generateWhatsappMsg("RITUEL", this.product.badge, this.product.price);
-            this.sendOrder(msg, this.total);
+            this.sendOrder(msg, this.total, this.product);
         }
     }));
 
-    // 3. LOGIQUE BOUTIQUE
+    // 3. LOGIQUE BOUTIQUE (Panier seul)
     Alpine.data('shopAll', () => ({
         ...commonLogic,
         items: diverseProducts,
@@ -189,7 +253,6 @@ document.addEventListener('alpine:init', () => {
         filter: 'Tout',
         
         get activeZone() { return this.zones.find(z => z.id === this.selectedZoneId) || this.zones[0]; },
-
         get subtotal() { return this.cart.reduce((sum, item) => sum + item.price, 0); },
         
         get discountAmount() {
@@ -209,10 +272,14 @@ document.addEventListener('alpine:init', () => {
             return this.items.filter(i => i.category === this.filter);
         },
 
+        init() {
+            this.detectSource(); // Détecter la source aussi sur la page boutique
+        },
+
         submitOrder() {
             if (this.cart.length === 0) { alert('⚠️ Panier vide'); return; }
             let msg = this.generateWhatsappMsg("BOUTIQUE");
-            this.sendOrder(msg, this.total);
+            this.sendOrder(msg, this.total, null);
         }
     }));
 });

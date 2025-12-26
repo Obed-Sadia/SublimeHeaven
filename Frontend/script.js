@@ -7,6 +7,42 @@ if (typeof supabaseConfig !== 'undefined' && typeof window.supabase !== 'undefin
     console.error("⚠️ Supabase non configuré ou librairie manquante.");
 }
 
+
+// --- FONCTION DE TRACKING VISITEURS ---
+async function logVisit() {
+    if (!supabaseClient) return;
+
+    // 1. Détection rudimentaire de l'OS et du Device
+    const ua = navigator.userAgent.toLowerCase();
+    let os = "Inconnu";
+    let device = "Desktop";
+
+    if (ua.includes("android")) { os = "Android"; device = "Mobile"; }
+    else if (ua.includes("iphone") || ua.includes("ipad")) { os = "iOS"; device = "Mobile"; }
+    else if (ua.includes("windows")) os = "Windows";
+    else if (ua.includes("mac os")) os = "macOS";
+
+    // 2. Récupération de la source (UTM)
+    const urlParams = new URLSearchParams(window.location.search);
+    const source = urlParams.get('source') || sessionStorage.getItem('saved_source') || 'Direct/Organique';
+
+    // 3. Envoi discret à Supabase
+    // On ne bloque pas le site si ça échoue (fire and forget)
+    supabaseClient.from('site_traffic').insert([{
+        page_url: window.location.pathname,
+        source: source,
+        device_type: device,
+        os: os,
+        user_agent: navigator.userAgent
+    }]).then(({ error }) => {
+        if (error) console.warn("Erreur tracking:", error);
+    });
+}
+
+// Lancer le tracking au chargement
+logVisit();
+
+
 // --- GESTION MARKETING (PIXELS) ---
 function initMarketing() {
     if (typeof marketingConfig !== 'undefined' && marketingConfig.facebookPixelId) {

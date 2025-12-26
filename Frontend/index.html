@@ -26,6 +26,7 @@
             }
         }
     </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     
     <style>
@@ -81,12 +82,99 @@
                 </div>
             </div>
 
-            <div class="md:w-1/2 mt-10 md:mt-0 relative">
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-green-200 rounded-full blur-3xl opacity-30"></div>
-                <img src="https://placehold.co/600x600/10B981/FFFFFF?text=Femme+Eclatante" alt="Femme Sublime Haeven" class="relative z-10 rounded-3xl shadow-2xl transform rotate-2 hover:rotate-0 transition duration-500">
+            
+            <div class="md:w-1/2 mt-10 md:mt-0 relative flex justify-center" x-data="{ sliderPosition: 50 }">
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] md:w-[520px] md:h-[520px] bg-green-200 rounded-full blur-3xl opacity-30"></div>
+                <div class="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-3xl shadow-2xl overflow-hidden border-4 border-white select-none">
+                    <img src="https://placehold.co/600x600/10B981/FFFFFF?text=APRES+(Peau+Nette)" 
+                        alt="Résultat Après" 
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded shadow z-10">
+                        APRÈS
+                    </div>
+                    <div class="absolute inset-0 w-full h-full" 
+                        :style="`clip-path: inset(0 ${100 - sliderPosition}% 0 0)`">
+                        <img src="https://placehold.co/600x600/EF4444/FFFFFF?text=AVANT+(Boutons)" 
+                            alt="Situation Avant" 
+                            class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                            AVANT
+                        </div>
+                    </div>
+                    <div class="absolute inset-y-0 w-1 bg-white cursor-ew-resize shadow-[0_0_10px_rgba(0,0,0,0.5)] z-20 pointer-events-none"
+                        :style="`left: ${sliderPosition}%`">
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" transform="rotate(90 12 12)" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <input type="range" min="0" max="100" value="50" 
+                        x-model="sliderPosition"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30 m-0 p-0"
+                        aria-label="Contrôle avant après">
+                </div>
             </div>
+
         </div>
     </header>
+
+
+    <section class="bg-white py-16 px-4 border-b border-gray-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                
+                <div class="relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-green-100 rounded-full opacity-50 z-0"></div>
+                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-yellow-100 rounded-full opacity-50 z-0"></div>
+                    <img src="https://placehold.co/600x700/1F2937/FFFFFF?text=Notre+Histoire" alt="Fondatrice Sublime Haven" class="relative z-10 rounded-2xl shadow-xl w-full object-cover h-[400px]">
+                    
+                    <div class="absolute bottom-8 -left-6 bg-white p-4 rounded-xl shadow-lg z-20 border border-gray-50 max-w-[200px] hidden md:block">
+                        <p class="text-3xl font-extrabold text-primary mb-1">500+</p>
+                        <p class="text-xs text-gray-500 font-medium">Femmes satisfaites accompagnées à Abidjan</p>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-accent font-bold tracking-widest text-xs uppercase mb-2 block">Notre Mission</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-dark mb-6 leading-tight">
+                        Révéler votre beauté authentique, <span class="text-primary">sans danger.</span>
+                    </h2>
+                    
+                    <div class="space-y-4 text-gray-600 leading-relaxed mb-8">
+                        <p>
+                            Bienvenue chez <strong>Sublime Haven</strong>. Nous savons à quel point il est difficile de trouver des produits fiables à Abidjan, entre les contrefaçons et les mélanges dangereux ("tchatcho").
+                        </p>
+                        <p>
+                            Notre promesse est simple : Nous ne vendons pas des rêves, mais des <strong>résultats basés sur la science</strong>. En tant que distributeur agréé Longrich, nous sélectionnons des rituels qui réparent la peau et les cheveux en profondeur, plutôt que de les camoufler.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-center">
+                            <div class="text-2xl mb-2">🌿</div>
+                            <h4 class="font-bold text-xs text-dark uppercase">Naturel</h4>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-center">
+                            <div class="text-2xl mb-2">💎</div>
+                            <h4 class="font-bold text-xs text-dark uppercase">Original</h4>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-center">
+                            <div class="text-2xl mb-2">👩‍⚕️</div>
+                            <h4 class="font-bold text-xs text-dark uppercase">Suivi Perso</h4>
+                        </div>
+                    </div>
+
+                    <a href="#boutique" class="inline-flex items-center text-primary font-bold hover:text-green-700 transition group">
+                        Découvrir nos solutions
+                        <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <section class="bg-white border-b border-gray-100 py-8">
         <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">

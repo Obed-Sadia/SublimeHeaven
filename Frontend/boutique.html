@@ -3,275 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Boutique Longrich | Tous nos produits à Abidjan</title>
-    <meta name="description" content="Découvrez tous les produits Longrich disponibles : Dentifrice, Savons, Huiles, Lait de corps. Livraison rapide à Abidjan et partout en Côte d'Ivoire.">
-    
+    <title>La Boutique Longrich Abidjan | Dentifrice, Savons, Thés & Soins</title>
+    <meta name="description" content="Commandez tous vos produits Longrich authentiques au détail à Abidjan. Dentifrice, Savon Bambou, Gobelet Alcalin. Prix officiels et paiement à la livraison.">
+
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Sublime Haven Abidjan",
+    "image": "https://placehold.co/600x600/10B981/FFFFFF?text=BOUTIQUE",
+    "description": "Distributeur agréé des produits de santé et cosmétique Longrich à Abidjan.",
+    "telephone": "+22506394798",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Abidjan",
+        "addressCountry": "CI"
+    },
+    "priceRange": "$$",
+    "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+        ],
+        "opens": "08:00",
+        "closes": "20:00"
+    }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#10B981', accent: '#F59E0B', dark: '#1F2937', light: '#F9FAFB' },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    colors: {
+                        primary: '#10B981', 
+                        primaryDark: '#047857',
+                        accent: '#F59E0B',  
+                        dark: '#1F2937',    
+                        light: '#F9FAFB',   
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
                 }
             }
         }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+    </script>  
+    <script src="data.js"></script> 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+    <script src="script.js"></script>
 </head>
+<body class="bg-gray-50 text-dark font-sans antialiased" 
+      x-data="shopData()" 
+      x-init="initShop()">
 
-<body class="bg-light text-dark font-sans pb-20" x-data="shopAll">
-
-    <nav class="bg-white shadow-sm py-4 sticky top-0 z-50 px-4 flex justify-between items-center">
-        <a href="index.html" class="font-extrabold text-xl tracking-tighter text-primary uppercase">SUBLIME<span class="text-dark">HAVEN</span></a>
-        
-        <div class="flex items-center gap-4">
-            <a href="index.html" class="text-[10px] font-bold text-gray-400 uppercase tracking-wide hidden sm:block">Retour Accueil</a>
-            <a href="#commande" class="relative text-sm font-bold text-accent flex items-center gap-1 border border-accent/20 px-3 py-1.5 rounded-full bg-accent/5">
-                <span>Panier</span>
-                <span x-show="cart.length > 0" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full" x-text="cart.length"></span>
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col leading-none">
+                <span class="font-extrabold text-lg tracking-tighter text-primary uppercase">SUBLIME<span class="text-dark">HAVEN</span></span>
+                <span class="text-[9px] text-gray-400 tracking-[0.2em] uppercase">Boutique</span>
             </a>
+
+            <button @click="cartOpen = true" class="relative p-2 text-dark hover:text-primary transition" x-show="cart.length > 0" x-transition>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center" x-text="cart.length">0</span>
+            </button>
         </div>
     </nav>
 
-    <header class="bg-primary py-10 px-4 text-center text-white mb-6 rounded-b-[2rem] shadow-lg">
-        <h1 class="text-2xl font-bold mb-2">La Boutique Complète</h1>
-        <p class="text-sm opacity-90">Composez votre panier sur mesure.</p>
-    </header>
-
-    <div class="px-4 mb-6 overflow-x-auto whitespace-nowrap no-scrollbar flex gap-2 justify-center sm:justify-start">
-        <template x-for="cat in ['Tout', 'Hygiène', 'Corps', 'Santé', 'Cheveux']">
-            <button @click="filter = cat" 
-                :class="filter === cat ? 'bg-dark text-white shadow-md transform scale-105' : 'bg-white text-gray-600 border'"
-                class="px-4 py-2 rounded-full text-xs font-bold transition duration-200" x-text="cat"></button>
-        </template>
+    <div class="bg-white border-b border-gray-200 sticky top-[53px] z-30 py-3 px-4 shadow-sm">
+        <div class="max-w-6xl mx-auto flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+            <button @click="filter = 'all'" 
+                :class="filter === 'all' ? 'bg-dark text-white' : 'bg-gray-100 text-gray-600'"
+                class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition">
+                Tout voir
+            </button>
+            <button @click="filter = 'Hygiène'" 
+                :class="filter === 'Hygiène' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'"
+                class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition">
+                Hygiène & Dents
+            </button>
+            <button @click="filter = 'Corps'" 
+                :class="filter === 'Corps' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'"
+                class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition">
+                Soins Corps
+            </button>
+            <button @click="filter = 'Santé'" 
+                :class="filter === 'Santé' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'"
+                class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition">
+                Santé & Douleurs
+            </button>
+        </div>
+        
+        <div class="max-w-6xl mx-auto mt-3">
+            <input x-model="search" type="text" placeholder="🔍 Rechercher un produit (ex: Dentifrice)..." 
+                class="w-full bg-gray-100 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+        </div>
     </div>
 
-    <div class="px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
-        <template x-for="item in filteredItems" :key="item.id">
-            <div class="bg-white rounded-xl shadow-sm p-3 flex flex-col h-full border border-gray-100 cursor-pointer hover:shadow-md transition relative overflow-hidden" 
-                 :class="isInCart(item.id) ? 'ring-2 ring-primary' : ''">
-                
-                <div x-show="isInCart(item.id)" class="absolute top-2 right-2 bg-primary text-white text-[10px] px-2 py-1 rounded-full z-10 font-bold shadow animate-bounce">
-                    Dans le panier ✓
-                </div>
-
-                <div class="bg-gray-50 rounded-lg mb-3 p-2 h-32 flex items-center justify-center relative overflow-hidden" @click="activeProduct = item">
-                    <img :src="item.img" class="max-h-full object-contain transform hover:scale-110 transition duration-500">
-                </div>
-                
-                <div class="flex-grow" @click="activeProduct = item">
-                    <span class="text-[10px] text-green-600 font-bold uppercase tracking-wider" x-text="item.category"></span>
-                    <h3 class="font-bold text-xs text-dark leading-tight mt-1 mb-1" x-text="item.name"></h3>
-                    <p class="text-[10px] text-gray-400 line-clamp-2" x-text="item.desc_short"></p>
-                </div>
-                
-                <div class="mt-3 pt-2 border-t border-gray-50">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="font-extrabold text-sm text-primary" x-text="new Intl.NumberFormat('fr-FR').format(item.price) + ' F'"></span>
+    <main class="max-w-6xl mx-auto px-4 py-8 pb-32">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            
+            <template x-for="product in filteredProducts" :key="product.id">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full hover:shadow-md transition">
+                    <div class="relative h-40 bg-gray-100 overflow-hidden">
+                        <img :src="product.img" :alt="product.name" class="w-full h-full object-cover">
+                        <span x-show="product.category === 'Santé'" class="absolute top-2 left-2 bg-red-100 text-red-600 text-[9px] font-bold px-2 py-1 rounded">PHARMACIE</span>
+                        <span x-show="product.category === 'Hygiène'" class="absolute top-2 left-2 bg-blue-100 text-blue-600 text-[9px] font-bold px-2 py-1 rounded">ESSENTIEL</span>
                     </div>
-                    <button @click.stop="toggleCart(item)" 
-                            :class="isInCart(item.id) ? 'bg-gray-100 text-gray-600' : 'bg-dark text-white'"
-                            class="w-full py-2 rounded-lg font-bold text-xs shadow-sm transition active:scale-95">
-                        <span x-text="isInCart(item.id) ? 'Retirer du panier' : 'Ajouter au panier +'"></span>
-                    </button>
-                </div>
-            </div>
-        </template>
-    </div>
-
-    <section id="commande" class="py-10 px-4 bg-white border-t border-gray-200">
-        <div class="max-w-md mx-auto bg-white border-2 border-gray-100 rounded-2xl shadow-2xl overflow-hidden relative">
-            
-            <div class="bg-dark p-5 text-center text-white">
-                <h3 class="font-bold text-xl">Valider mon Panier</h3>
-                <p class="text-xs text-gray-400 mt-1">Livraison Rapide • Paiement à l'arrivée</p>
-            </div>
-            
-            <div class="p-6 space-y-4">
-                
-                <div x-show="cart.length === 0" class="text-center py-8 text-gray-400">
-                    <p class="text-4xl mb-2">🛒</p>
-                    <p class="text-sm">Votre panier est vide.</p>
-                    <p class="text-xs mt-1">Ajoutez des produits ci-dessus.</p>
-                </div>
-
-                <div x-show="cart.length > 0" class="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
                     
-                    <template x-for="item in cart" :key="item.id">
-                        <div class="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-200 pb-2 last:border-0 last:pb-0">
-                            <div class="flex items-center gap-2">
-                                <button @click="toggleCart(item)" class="text-red-400 hover:text-red-600 font-bold px-1">✕</button>
-                                <span class="font-bold text-dark" x-text="item.name"></span>
-                            </div>
-                            <span x-text="formatPrice(item.price) + ' F'"></span>
-                        </div>
-                    </template>
-
-                    <div class="mt-4 mb-4 pt-4 border-t border-gray-100">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Avez-vous un code promo ?</label>
-                        <div class="flex gap-2">
-                            <input x-model="promoInput" type="text" placeholder="Entrez le code ici" 
-                                class="flex-1 bg-white border border-gray-200 rounded px-3 py-2 text-xs uppercase focus:ring-1 focus:ring-primary focus:outline-none">
-                            <button @click="applyPromo()" class="bg-gray-800 text-white text-[10px] font-bold px-3 py-2 rounded hover:bg-black transition">
-                                OK
+                    <div class="p-3 flex flex-col flex-grow">
+                        <h3 class="font-bold text-sm text-dark leading-tight mb-1" x-text="product.name"></h3>
+                        <p class="text-[10px] text-gray-500 mb-2 line-clamp-2" x-text="product.desc_short"></p>
+                        
+                        <div class="mt-auto pt-2 flex flex-col gap-2">
+                            <span class="font-extrabold text-primary text-base" x-text="formatPrice(product.price)"></span>
+                            <button @click="addToCart(product)" 
+                                class="w-full py-2 bg-dark text-white text-xs font-bold rounded-lg hover:bg-gray-800 transition active:scale-95 flex items-center justify-center gap-1">
+                                <span>+</span> Ajouter
                             </button>
                         </div>
-                        
-                        <p x-show="promoMessage" x-text="promoMessage" 
-                        :class="promoError ? 'text-red-500' : 'text-green-600'" 
-                        class="text-[10px] font-bold mt-1"></p>
-                        
-                        <div x-show="appliedPromo" class="flex justify-between items-center mt-2 text-green-600 text-xs font-bold bg-green-50 p-2 rounded border border-green-100">
-                            <span>Réduction appliquée :</span>
-                            <span x-text="'- ' + formatPrice(discountAmount) + ' F'"></span>
-                        </div>
                     </div>
+                </div>
+            </template>
+        
+        </div>
+        
+        <div x-show="filteredProducts.length === 0" class="text-center py-12 text-gray-500" x-cloak>
+            <p>Aucun produit ne correspond à votre recherche 😟</p>
+            <button @click="search = ''; filter = 'all'" class="text-primary font-bold mt-2 text-sm underline">Tout afficher</button>
+        </div>
+    </main>
+
+    <div x-show="cartOpen" class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" x-cloak>
+        <div class="absolute inset-0 overflow-hidden">
+            <div x-show="cartOpen" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity" @click="cartOpen = false"></div>
+
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <div x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="pointer-events-auto w-screen max-w-md">
                     
-                    <div class="border-t border-gray-200 mt-3 pt-3">
-                        <div class="flex justify-between items-center mb-2 text-gray-500 text-xs">
-                            <span>Sous-total produits :</span>
-                            <span x-text="formatPrice(subtotal) + ' F'"></span>
+                    <div class="flex h-full flex-col bg-white shadow-xl">
+                        <div class="flex items-start justify-between px-4 py-6 sm:px-6 border-b border-gray-100">
+                            <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Votre Panier</h2>
+                            <button @click="cartOpen = false" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Fermer</span>
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
                         </div>
 
-                        <div class="mb-3 bg-white p-2 rounded border border-gray-200">
-                            <label class="block text-[10px] font-bold text-dark mb-1 uppercase tracking-wide">
-                                📍 Où doit-on livrer ?
-                            </label>
-                            <select x-model="selectedZoneId" class="w-full bg-transparent font-bold text-xs text-dark focus:outline-none">
+                        <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                            <template x-if="cart.length === 0">
+                                <div class="text-center text-gray-500 mt-10">
+                                    <p>Votre panier est vide.</p>
+                                    <button @click="cartOpen = false" class="mt-4 text-primary font-bold underline">Retourner à la boutique</button>
+                                </div>
+                            </template>
+                            
+                            <ul role="list" class="-my-6 divide-y divide-gray-200">
+                                <template x-for="(item, index) in cart" :key="index">
+                                    <li class="flex py-6">
+                                        <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                            <img :src="item.img" class="h-full w-full object-cover object-center">
+                                        </div>
+                                        <div class="ml-4 flex flex-1 flex-col">
+                                            <div>
+                                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                                    <h3 x-text="item.name"></h3>
+                                                    <p class="ml-4" x-text="formatPrice(item.price)"></p>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-1 items-end justify-between text-sm">
+                                                <p class="text-gray-500">Qté: 1</p>
+                                                <button @click="removeFromCart(index)" type="button" class="font-medium text-red-500 hover:text-red-600">Supprimer</button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+
+                        <div class="border-t border-gray-200 px-4 py-6 sm:px-6 bg-gray-50">
+                            <div x-show="cart.length === 0" class="text-center text-gray-500 py-4">
+                                Votre panier est vide.
+                            </div>
+
+                            <div x-show="cart.length > 0">
+                                <div class="flex justify-between text-base font-bold text-gray-900 mb-4">
+                                    <p>Sous-total</p>
+                                    <p x-text="formatPrice(cartTotal)"></p>
+                                </div>
+                                <p class="mt-0.5 text-xs text-gray-500 mb-6">Livraison calculée à l'étape suivante.</p>
+                                
+                                <button @click="cartOpen = false; openModal = true" 
+                                    class="flex items-center justify-center w-full rounded-md border border-transparent bg-dark px-6 py-4 text-base font-bold text-white shadow-sm hover:bg-gray-800 transition">
+                                    PASSER À LA CAISSE →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="cart.length > 0 && !cartOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-y-full"
+         x-transition:enter-end="translate-y-0"
+         class="fixed bottom-4 left-4 right-4 z-40 md:hidden">
+        <button @click="cartOpen = true" class="w-full bg-dark text-white font-bold py-3 px-6 rounded-full shadow-2xl flex justify-between items-center">
+            <span class="flex items-center gap-2">
+                <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full" x-text="cart.length"></span>
+                <span>Voir le panier</span>
+            </span>
+            <span x-text="formatPrice(cartTotal)"></span>
+        </button>
+    </div>
+
+    <div x-show="openModal" style="display: none;" 
+        x-transition.opacity
+        class="fixed inset-0 z-[100] overflow-y-auto" aria-modal="true">
+        
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div @click="openModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+            <div class="relative inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                
+                <button @click="openModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
+
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl font-bold text-dark">Finaliser votre Panier</h3>
+                        <p class="text-sm text-gray-500">Dernière étape avant WhatsApp</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nom Complet</label>
+                            <input type="text" x-model="customer.name" placeholder="Votre nom" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Téléphone</label>
+                            <input type="tel" x-model="customer.phone" placeholder="Votre numéro" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Commune</label>
+                            <input type="text" x-model="customer.city" placeholder="Ex: Cocody" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Zone de Livraison</label>
+                            <select x-model="selectedZoneId" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-primary">
                                 <template x-for="zone in zones" :key="zone.id">
                                     <option :value="zone.id" x-text="zone.name + ' (+' + zone.price + ' F)'"></option>
                                 </template>
                             </select>
                         </div>
 
-                        <div class="flex justify-between items-end font-extrabold text-xl text-primary mt-3 pt-3 border-t border-gray-300">
-                            <div class="flex flex-col">
-                                <span class="text-sm text-gray-500 font-normal">Total à payer :</span>
-                                <span class="text-[10px] text-gray-400 font-normal" x-text="'(Livraison: ' + activeZone.price + ' F)'"></span>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-dashed border-gray-300 mt-2">
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Code Promo (Optionnel)</label>
+                            <div class="flex gap-2">
+                                <input type="text" x-model="promoInput" placeholder="Ex: BIENVENUE" 
+                                    class="flex-1 bg-white border border-gray-300 rounded text-sm px-3 py-2 uppercase focus:ring-1 focus:ring-primary outline-none">
+                                <button @click="applyPromo()" class="bg-dark text-white text-xs font-bold px-4 rounded hover:bg-gray-800 transition">
+                                    OK
+                                </button>
                             </div>
-                            <span x-text="formatPrice(total) + ' FCFA'"></span>
+                            <p x-show="promoMessage" x-text="promoMessage" 
+                            :class="promoError ? 'text-red-500' : 'text-green-600'" 
+                            class="text-[10px] mt-1 font-medium"></p>
                         </div>
+
+                        <div class="border-t border-gray-100 pt-4 mt-4 space-y-1">
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Panier :</span>
+                                <span x-text="formatPrice(cartTotal)"></span>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Livraison :</span>
+                                <span x-text="'+ ' + formatPrice(activeZone.price)"></span>
+                            </div>
+                            
+                            <div x-show="appliedPromo" class="flex justify-between text-xs font-bold text-green-600">
+                                <span>Réduction :</span>
+                                <span x-text="'- ' + formatPrice(discountAmount)"></span>
+                            </div>
+
+                            <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+                                <span class="font-bold text-dark">Total Net :</span>
+                                <span class="text-xl font-extrabold text-primary" x-text="formatPrice(cartTotal + activeZone.price - discountAmount)"></span>
+                            </div>
+                        </div>
+
+                        <button @click="checkoutWhatsApp()" 
+                            class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-4 rounded-xl shadow-lg transition flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                            COMMANDER SUR WHATSAPP
+                        </button>
                     </div>
                 </div>
-
-                <div x-show="cart.length > 0" class="space-y-3 pt-2">
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
-                        <input x-model="customer.name" type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Votre Nom Complet">
-                    </div>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">📞</span>
-                        <input x-model="customer.phone" type="tel" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Votre Numéro WhatsApp">
-                    </div>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">📍</span>
-                        <input x-model="customer.city" type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Ville et Quartier">
-                    </div>
-
-                    <button @click="submitOrder()" class="group relative w-full bg-gradient-to-r from-accent to-yellow-600 text-white font-extrabold text-xl py-4 rounded-xl shadow-lg shadow-yellow-500/30 overflow-hidden transform transition active:scale-95 mt-4">
-                        <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:animate-shine"></div>
-                        <span class="relative z-10 flex justify-center items-center gap-2">
-                            COMMANDER MAINTENANT
-                        </span>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 py-4 mt-6 bg-gray-50 border border-gray-100 rounded-xl">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🚚</div>
-                        <h4 class="font-bold text-[10px] text-dark">Expédition 24H</h4>
-                        <p class="text-[9px] text-gray-400">Abidjan</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🤝</div>
-                        <h4 class="font-bold text-[10px] text-dark">Paiement Cash</h4>
-                        <p class="text-[9px] text-gray-400">À la livraison</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">💎</div>
-                        <h4 class="font-bold text-[10px] text-dark">Authentique</h4>
-                        <p class="text-[9px] text-gray-400">Certifié Longrich</p>
-                    </div>
-                </div>
-
             </div>
-        </div>
-    </section>
-
-    <div x-show="activeProduct" style="display: none;"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 translate-y-full"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-full"
-         class="fixed inset-0 z-[60] flex items-end justify-center sm:items-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
-        
-        <div class="bg-white w-full max-w-md p-6 rounded-t-3xl sm:rounded-3xl relative h-[85vh] sm:h-auto flex flex-col shadow-2xl" @click.outside="activeProduct = null">
-            
-            <button @click="activeProduct = null" class="absolute top-4 right-4 bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center text-gray-600 font-bold hover:bg-gray-200 transition">✕</button>
-            
-            <template x-if="activeProduct">
-                <div class="flex flex-col h-full">
-                    <div class="flex justify-center mb-6 mt-4">
-                        <img :src="activeProduct.img" class="h-48 object-contain drop-shadow-xl">
-                    </div>
-                    
-                    <span class="inline-block self-start bg-green-100 text-green-800 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wide mb-2" x-text="activeProduct.category"></span>
-                    
-                    <h2 class="text-2xl font-extrabold text-dark mb-2" x-text="activeProduct.name"></h2>
-                    <p class="text-xl font-bold text-primary mb-6" x-text="new Intl.NumberFormat('fr-FR').format(activeProduct.price) + ' FCFA'"></p>
-                    
-                    <div class="overflow-y-auto flex-grow pr-2 mb-6 scrollbar-thin">
-                        <h3 class="text-sm font-bold text-dark mb-2">Description</h3>
-                        <p class="text-sm text-gray-600 leading-relaxed" x-text="activeProduct.desc_long"></p>
-                    </div>
-                    
-                    <button @click="toggleCart(activeProduct); activeProduct = null" 
-                            :class="isInCart(activeProduct.id) ? 'bg-gray-100 text-gray-600' : 'bg-dark text-white'"
-                            class="w-full font-bold py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 mt-auto transition active:scale-95">
-                        <span x-text="isInCart(activeProduct.id) ? 'RETIRER DU PANIER' : 'AJOUTER AU PANIER'"></span>
-                    </button>
-                </div>
-            </template>
         </div>
     </div>
-
-    <footer class="bg-dark text-gray-400 py-10 px-4">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-            <div>
-                <span class="font-extrabold text-white text-lg uppercase tracking-tighter">SUBLIME<span class="text-primary">HAVEN</span></span>
-                <p class="mt-4 leading-relaxed">Votre destination pour des soins dermo-cosmétiques authentiques et efficaces. Nous livrons le bien-être à votre porte.</p>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Liens Rapides</h4>
-                <ul class="space-y-2">
-                    <li><a href="visage.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins Visage</a></li>
-                    <li><a href="teint.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins du Corps</a></li>
-                    <li><a href="cheveux.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Traitement Cheveux</a></li>
-                    <li><a href="douleur.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Anti-Douleurs</a></li>
-                    <li><a href="boutique.html" class="hover:text-primary transition flex items-center gap-2 text-accent font-bold"><span>★</span> La Boutique Complète</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contact</h4>
-                <p>Abidjan, Côte d'Ivoire</p>
-                <p class="mt-2">Tel: +225 07 00 00 00 00</p>
-            </div>
-        </div>
-        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-xs">
-            &copy; 2025 Sublime Haven. Distributeur Indépendant agréé Longrich. Tous droits réservés.
-        </div>
+    <footer class="bg-dark text-gray-400 py-8 text-center text-xs">
+        <p>&copy; 2025 Sublime Haven Abidjan. Distributeur Agréé.</p>
     </footer>
-
 </body>
 </html>

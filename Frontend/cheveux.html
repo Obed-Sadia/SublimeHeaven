@@ -3,332 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traitement Cheveux Durs et Casse Abidjan | Rituel Longrich</title>
-    
+    <title>Kit Pousse Cheveux & Anti-Casse | Longrich Abidjan</title>
+    <meta name="description" content="Stoppez la casse et activez la pousse des cheveux durs dès 13 500 FCFA. Shampoing réparateur et Huile de Serpent pour tempes dégarnies. Stock limité.">
+
+    <script type="application/ld+json">
+    {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "Kit Pousse & Réparation Cheveux",
+    "image": [
+        "https://placehold.co/600x400/8B5CF6/FFFFFF?text=KIT+CHEVEUX" 
+    ],
+    "description": "Routine capillaire pour cheveux secs, durs ou cassants. Active la pousse et répare la fibre. Contient Shampoing 2en1 et Huile de Serpent.",
+    "sku": "KI004",
+    "brand": {
+        "@type": "Brand",
+        "name": "Longrich"
+    },
+    "offers": {
+        "@type": "Offer",
+        "url": "https://ton-site.com/cheveux.html",
+        "priceCurrency": "XOF",
+        "price": "13500",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "areaServed": "CI"
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "reviewCount": "64"
+    }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#10B981', 
-                        accent: '#F59E0B', 
-                        dark: '#1F2937', 
-                        light: '#F9FAFB',
-                        whatsapp: '#25D366'
-                    },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    colors: { primary: '#10B981', primaryDark: '#047857', accent: '#8B5CF6', dark: '#1F2937', light: '#F9FAFB' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes shine { 100% { transform: translateX(200%) skewX(-12deg); } }
-        .group-hover\:animate-shine:hover { animation: shine 1.5s infinite; }
-    </style>
-    
     <script src="data.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-light text-dark font-sans antialiased" x-data="shopLogic('cheveux')">
 
-    <nav class="bg-white shadow-sm py-4 sticky top-0 z-50">
-        <div class="max-w-2xl mx-auto px-4 flex justify-between items-center">
-            <a href="index.html" class="font-extrabold text-xl tracking-tighter text-primary uppercase">
-                SUBLIME<span class="text-dark">HAVEN</span>
-            </a>
-            <a href="#commande" class="relative text-sm font-bold text-accent flex items-center gap-1">
-                <span>Panier</span>
-                <span x-show="cart.length > 0" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full" x-text="cart.length + 1"></span>
-            </a>
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-gray-500 text-sm hover:text-primary transition"><span>←</span> Accueil</a>
+            <span class="font-extrabold text-xl tracking-tighter text-primary uppercase">SUBLIME<span class="text-dark">HAVEN</span></span>
         </div>
     </nav>
 
-    <header class="bg-white pb-10 pt-6 px-4 text-center">
-        <div class="max-w-md mx-auto">
-            <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide mb-4" x-text="product.badge"></span>
-            <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4 text-dark" x-text="product.title"></h1>
-            <p class="text-gray-600 text-lg mb-6" x-text="product.subtitle"></p>
+    <div class="bg-red-600 text-white text-xs md:text-sm text-center py-3 font-bold tracking-wide shadow-md relative z-50 animate-pulse">
+    🔥 ATTENTION : Il ne reste que <span x-text="stockLevel" class="bg-white text-red-600 px-1.5 py-0.5 rounded-full mx-1 text-base"></span> kits en stock à ce prix !
+    </div>
+
+    <header class="relative bg-white overflow-hidden">
+        <div class="absolute inset-0 bg-purple-50 opacity-50"></div>
+        <div class="max-w-4xl mx-auto px-4 py-12 md:py-20 relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-purple-100 text-purple-700 text-xs font-bold tracking-widest mb-4 uppercase">Spécial Cheveux Durs / Afro</span>
             
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white mb-6 w-full aspect-[3/2]">
-                <template x-for="(slide, index) in product.heroSlides" :key="index">
-                    <div x-show="activeHeroSlide === index" class="absolute inset-0 w-full h-full transition-opacity duration-700">
-                        <img :src="slide.img" class="w-full h-full object-cover">
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white text-left">
-                            <p class="font-bold text-lg" x-text="slide.text"></p>
-                        </div>
-                    </div>
-                </template>
+            <h1 class="font-serif text-3xl md:text-5xl font-bold text-dark mb-6 leading-tight">
+                Vos cheveux se cassent ?<br>
+                <span class="text-accent underline decoration-primary decoration-4 underline-offset-4">Réparez-les.</span>
+            </h1>
+            
+            <p class="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+                La solution pour assouplir les cheveux "grain de noir", stopper la chute et faire repousser les tempes dégarnies.
+            </p>
+
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 max-w-sm mx-auto transform hover:scale-105 transition duration-300">
+                <div class="flex justify-center items-baseline gap-2 mb-2">
+                    <span class="text-4xl font-extrabold text-dark" x-text="formatPrice(product.price)">13 500 F</span>
+                </div>
+                <p class="text-green-600 text-xs font-bold mb-6">Paiement à la livraison</p>
+                <button @click="openModal = true" class="w-full bg-accent hover:bg-purple-700 text-white font-bold py-4 rounded-xl shadow-lg transition animate-pulse">
+                    ACTIVER LA POUSSE
+                </button>
             </div>
-            
-            <a href="#commande" class="block w-full bg-accent hover:bg-yellow-600 text-white font-bold py-4 rounded-xl shadow-lg animate-pulse">
-                JE VEUX CETTE SOLUTION
-            </a>
         </div>
     </header>
 
-    <section class="bg-white py-10 px-4">
-        <div class="max-w-md mx-auto">
-            <h2 class="text-2xl font-bold text-center mb-8">Votre Rituel Expert</h2>
-            <div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:w-0.5 before:bg-slate-200">
-                <template x-for="step in product.steps" :key="step.num">
-                    <div class="relative flex items-center justify-between">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white shadow shrink-0 font-bold z-10" x-text="step.num"></div>
-                        <div class="w-[calc(100%-3.5rem)] bg-gray-50 p-4 rounded border shadow-sm relative">
-                            <span x-show="step.isSecret" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-bl font-bold">LE SECRET</span>
-                            <div class="font-bold text-slate-900" x-text="step.name"></div>
-                            <div class="text-slate-500 text-sm" x-text="step.desc"></div>
-                        </div>
+    <section class="py-16 px-4 bg-gray-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="font-serif text-3xl font-bold text-center mb-12">Le Rituel Pousse</h2>
+            <div class="space-y-8">
+                <div class="flex flex-col md:flex-row bg-white p-6 rounded-2xl shadow-sm items-center gap-6">
+                    <div class="w-24 h-24 bg-gray-200 rounded-full flex-shrink-0 overflow-hidden">
+                        <img src="https://placehold.co/200x200?text=Shampoing" class="w-full h-full object-cover">
                     </div>
-                </template>
+                    <div>
+                        <span class="text-accent font-bold text-xs uppercase">Étape 1 : Laver</span>
+                        <h3 class="font-bold text-lg mb-2">Shampoing 2 en 1 (Réparateur)</h3>
+                        <p class="text-sm text-gray-600">Il ne rend pas les cheveux secs comme les shampoings du marché. Il démêle et nourrit dès le lavage.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row bg-white p-6 rounded-2xl shadow-sm items-center gap-6">
+                    <div class="w-24 h-24 bg-gray-200 rounded-full flex-shrink-0 overflow-hidden">
+                        <img src="https://placehold.co/200x200?text=Huile+Serpent" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <span class="text-accent font-bold text-xs uppercase">Étape 2 : Traiter</span>
+                        <h3 class="font-bold text-lg mb-2">Huile de Serpent (Bain d'huile)</h3>
+                        <p class="text-sm text-gray-600">Le secret de la pousse. Massez les tempes et le cuir chevelu. Elle active la circulation sanguine.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="bg-green-50 py-10 border-t border-b border-green-100">
-        <div class="max-w-2xl mx-auto px-4">
-            <h3 class="text-xl font-bold text-center text-dark mb-2">Ce qu'elles en pensent 👇</h3>
-            <p class="text-center text-xs text-gray-500 mb-6">Témoignages reçus sur WhatsApp</p>
-            
-            <div class="flex overflow-x-auto space-x-4 pb-4 no-scrollbar snap-x snap-mandatory px-2">
-                <template x-for="(rev, index) in product.reviews" :key="index">
-                    <div class="min-w-[260px] bg-white rounded-xl shadow-sm p-4 snap-center border border-gray-100 relative">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-500 text-xs" x-text="rev.name.charAt(0)"></div>
-                            <div class="ml-2">
-                                <p class="text-xs font-bold text-gray-800" x-text="rev.name"></p>
-                                <p class="text-[10px] text-gray-400" x-text="rev.date"></p>
-                            </div>
-                            <div class="ml-auto text-whatsapp text-xs font-bold flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-                                WhatsApp
-                            </div>
-                        </div>
-                        <div class="bg-green-100 p-3 rounded-lg rounded-tl-none text-xs text-gray-800 leading-relaxed shadow-sm">
-                            <span x-text="rev.text"></span>
-                        </div>
-                    </div>
-                </template>
-            </div>
-            <p class="text-center text-xs text-gray-400 mt-2">← Glissez pour voir plus →</p>
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 md:hidden z-40 flex justify-between items-center">
+        <div class="flex flex-col">
+            <span class="text-xs text-gray-500">Kit Cheveux</span>
+            <span class="font-extrabold text-lg text-accent" x-text="formatPrice(product.price)"></span>
         </div>
-    </section>
+        <button @click="openModal = true" class="bg-accent text-white font-bold px-6 py-3 rounded-full text-sm shadow-lg">
+            COMMANDER
+        </button>
+    </div>
 
-    <article class="bg-white py-12 px-4 border-t border-gray-100">
-        <div class="max-w-2xl mx-auto prose prose-green prose-sm text-gray-600">
-            <h2 class="text-xl font-bold text-dark text-center mb-4">Stop à la casse : La Solution pour Cheveux Durs et Secs</h2>
-            
-            <p>Avoir des cheveux crépus (nappy) ou défrisés qui se cassent tout le temps est un problème majeur à Abidjan. Souvent, c'est parce que le cheveu manque de protéines ou que le cuir chevelu étouffe sous les pellicules. Le Rituel Capillaire Longrich s'attaque à ces deux causes.</p>
-            
-            <h3 class="font-bold text-dark mt-4">Pourquoi le Shampoing 2 en 1 est différent ?</h3>
-            <p>La plupart des shampoings assèchent le cheveu afro. Le <span class="font-bold text-primary">Shampoing 2 en 1 Nettoyant & Traitement</span> est formulé spécifiquement pour les "cheveux durs". Il nettoie et répare en une seule étape, rendant la fibre capillaire souple et facile à coiffer dès le rinçage.</p>
-
-            <h3 class="font-bold text-dark mt-4">Le Miracle de l'Huile de Serpent</h3>
-            <p>Ce n'est pas une simple huile de brillance. Appliquée sur le cuir chevelu, elle active la circulation sanguine pour <span class="font-bold">accélérer la pousse</span>. Elle est aussi redoutable contre les pellicules et les démangeaisons.</p>
-            
-            <div class="bg-yellow-50 p-4 rounded-lg mt-6 border border-yellow-100 text-xs">
-                <strong>Conseil d'Expert :</strong> Pour les cas d'alopécie de traction (devanture dégarnie), appliquez l'huile de serpent chaque soir en massant 5 minutes la zone concernée. Ne rincez pas.
-            </div>
-        </div>
-    </article>
-
-    <section class="bg-white py-10 px-4">
-        <div class="max-w-2xl mx-auto">
-            <h3 class="text-xl font-bold text-center mb-6">Pour compléter votre routine</h3>
-            <div class="flex overflow-x-auto space-x-4 pb-6 no-scrollbar snap-x snap-mandatory">
-                <template x-for="item in extraProducts" :key="item.id">
-                    <div class="min-w-[170px] bg-white rounded-xl shadow p-3 snap-center flex flex-col justify-between border relative">
-                        <div x-show="isInCart(item.id)" class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full z-10 shadow">✓</div>
-                        <img :src="item.img" class="rounded-lg mb-2 w-full h-24 object-contain">
-                        <div>
-                            <h4 class="font-bold text-xs" x-text="item.name"></h4>
-                            <p class="text-[10px] text-gray-500 leading-tight mt-1" x-text="item.desc_short"></p>
-                        </div>
-                        <button @click="toggleCart(item)" :class="isInCart(item.id) ? 'bg-gray-100 text-gray-600' : 'bg-primary text-white'" class="w-full font-bold py-2 rounded mt-2 text-xs transition active:scale-95">
-                            <span x-text="isInCart(item.id) ? 'Retirer' : 'Ajouter +'"></span>
-                        </button>
+    <div x-show="openModal" style="display: none;" x-transition.opacity class="fixed inset-0 z-[100] overflow-y-auto" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div @click="openModal = false" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="relative inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <button @click="openModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl font-bold text-dark">Livraison Express Abidjan</h3>
+                        <p class="text-sm text-gray-500">Kit Cheveux</p>
                     </div>
-                </template>
-            </div>
-        </div>
-    </section>
-
-    <section class="bg-gray-50 py-10 px-4">
-        <div class="max-w-md mx-auto" x-data="{ selected: null }">
-            <h2 class="text-xl font-bold text-center mb-6">Questions Fréquentes</h2>
-            <div class="space-y-3">
-                <template x-for="(item, index) in product.faq" :key="index">
-                    <div class="bg-white rounded-lg border border-gray-100 shadow-sm">
-                        <button @click="selected !== index ? selected = index : selected = null" class="w-full text-left px-4 py-3 flex justify-between font-bold text-sm text-dark">
-                            <span x-text="item.q"></span>
-                            <span>▼</span>
-                        </button>
-                        <div x-show="selected === index" class="px-4 pb-3 text-xs text-gray-600 border-t pt-2" x-text="item.a"></div>
-                    </div>
-                </template>
-            </div>
-        </div>
-    </section>
-
-    <section id="commande" class="py-10 px-4 bg-white border-t border-gray-200">
-        <div class="max-w-md mx-auto bg-white border-2 border-gray-100 rounded-2xl shadow-2xl overflow-hidden relative">
-            
-            <div class="bg-red-600 text-white text-center text-xs font-bold py-1.5 uppercase tracking-widest animate-pulse">
-                ⚠️ Attention : Stock Limité à ce prix
-            </div>
-
-            <div class="bg-dark p-5 text-center text-white">
-                <h3 class="font-bold text-xl">Finaliser ma commande</h3>
-                <p class="text-xs text-gray-400 mt-1">Livraison Rapide • Zéro Risque</p>
-            </div>
-            
-            <div class="p-6 space-y-4">
-                <div class="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300">
-                    
-                    <div class="flex justify-between items-center border-b border-gray-200 pb-3 mb-3">
-                        <div>
-                            <span class="font-bold text-sm block text-gray-800" x-text="product.badge"></span>
-                            <span class="text-[10px] text-green-600 bg-green-100 px-1 rounded">Offre Web Active</span>
-                        </div>
-                        <span class="font-bold text-lg" x-text="formatPrice(product.price) + ' F'"></span>
-                    </div>
-                    
-                    <template x-for="item in cart" :key="item.id">
-                        <div class="flex justify-between items-center text-xs text-gray-600 mb-2">
-                            <div class="flex items-center gap-2">
-                                <div class="bg-white border rounded px-1 text-[10px] font-bold">+</div>
-                                <span x-text="item.name"></span>
-                            </div>
-                            <span x-text="formatPrice(item.price)"></span>
-                        </div>
-                    </template>
-
-                    <div class="mt-4 mb-4 pt-4 border-t border-gray-100">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Avez-vous un code promo ?</label>
+                    <div class="space-y-4">
+                        <input type="text" x-model="customer.name" placeholder="Votre Nom" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3">
+                        <input type="tel" x-model="customer.phone" placeholder="Votre Numéro" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3">
+                        <input type="text" x-model="customer.city" placeholder="Commune" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3">
+                        <select x-model="selectedZoneId" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-3">
+                            <template x-for="zone in zones" :key="zone.id">
+                                <option :value="zone.id" x-text="zone.name + ' (+' + zone.price + ' F)'"></option>
+                            </template>
+                        </select>
                         <div class="flex gap-2">
-                            <input x-model="promoInput" type="text" placeholder="Entrez le code ici" 
-                                class="flex-1 bg-white border border-gray-200 rounded px-3 py-2 text-xs uppercase focus:ring-1 focus:ring-primary focus:outline-none">
-                            <button @click="applyPromo()" class="bg-gray-800 text-white text-[10px] font-bold px-3 py-2 rounded hover:bg-black transition">
-                                OK
-                            </button>
+                            <input type="text" x-model="promoInput" placeholder="CODE PROMO" class="flex-1 bg-gray-50 border rounded p-2 text-xs uppercase">
+                            <button @click="applyPromo()" class="bg-gray-200 text-xs font-bold px-3 rounded">OK</button>
                         </div>
-                        
-                        <p x-show="promoMessage" x-text="promoMessage" 
-                        :class="promoError ? 'text-red-500' : 'text-green-600'" 
-                        class="text-[10px] font-bold mt-1"></p>
-                        
-                        <div x-show="appliedPromo" class="flex justify-between items-center mt-2 text-green-600 text-xs font-bold bg-green-50 p-2 rounded border border-green-100">
-                            <span>Réduction appliquée :</span>
-                            <span x-text="'- ' + formatPrice(discountAmount) + ' F'"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-gray-200 mt-3 pt-3">
-                        <div class="flex justify-between items-center mb-2 text-gray-500 text-xs">
-                            <span>Sous-total produits :</span>
-                            <span x-text="formatPrice(subtotal) + ' F'"></span>
-                        </div>
+                        <p x-show="promoMessage" x-text="promoMessage" class="text-[10px]" :class="promoError ? 'text-red-500' : 'text-green-600'"></p>
 
-                        <div class="mb-3 bg-white p-2 rounded border border-gray-200">
-                            <label class="block text-[10px] font-bold text-dark mb-1 uppercase tracking-wide">
-                                📍 Où doit-on livrer ?
-                            </label>
-                            <select x-model="selectedZoneId" class="w-full bg-transparent font-bold text-xs text-dark focus:outline-none">
-                                <template x-for="zone in zones" :key="zone.id">
-                                    <option :value="zone.id" x-text="zone.name + ' (+' + zone.price + ' F)'"></option>
-                                </template>
-                            </select>
+                        <div class="border-t pt-4 flex justify-between items-center">
+                            <span class="font-bold">Total :</span>
+                            <span class="text-xl font-extrabold text-primary" x-text="formatPrice(totalPrice)"></span>
                         </div>
-
-                        <div class="flex justify-between items-end font-extrabold text-xl text-primary mt-3 pt-3 border-t border-gray-300">
-                            <div class="flex flex-col">
-                                <span class="text-sm text-gray-500 font-normal">Total à payer :</span>
-                                <span class="text-[10px] text-gray-400 font-normal" x-text="'(Livraison: ' + activeZone.price + ' F)'"></span>
-                            </div>
-                            <span x-text="formatPrice(total) + ' FCFA'"></span>
-                        </div>
+                        <button @click="submitOrder()" :disabled="isSubmitting" class="w-full bg-accent text-white font-bold py-4 rounded-xl shadow-lg">
+                            <span x-show="!isSubmitting">VALIDER SUR WHATSAPP 👉</span>
+                            <span x-show="isSubmitting" class="animate-pulse">...</span>
+                        </button>
                     </div>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
-                        <input x-model="customer.name" type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Votre Nom Complet">
-                    </div>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">📞</span>
-                        <input x-model="customer.phone" type="tel" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Votre Numéro WhatsApp">
-                    </div>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3.5 text-gray-400">📍</span>
-                        <input x-model="customer.city" type="text" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Ville et Quartier">
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <button @click="submitOrder()" class="group relative w-full bg-gradient-to-r from-accent to-yellow-600 text-white font-extrabold text-xl py-4 rounded-xl shadow-lg shadow-yellow-500/30 overflow-hidden transform transition active:scale-95">
-                        <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:animate-shine"></div>
-                        <span class="relative z-10 flex justify-center items-center gap-2">
-                            COMMANDER MAINTENANT
-                        </span>
-                    </button>
-                    
-                    <div class="grid grid-cols-3 gap-2 py-4 mt-6 bg-gray-50 border border-gray-100 rounded-xl">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🚚</div>
-                            <h4 class="font-bold text-[10px] text-dark">Expédition 24H</h4>
-                            <p class="text-[9px] text-gray-400">Partout à Abidjan</p>
-                        </div>
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">🤝</div>
-                            <h4 class="font-bold text-[10px] text-dark">Paiement Cash</h4>
-                            <p class="text-[9px] text-gray-400">À la livraison</p>
-                        </div>
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-lg mb-1">💎</div>
-                            <h4 class="font-bold text-[10px] text-dark">Authentique</h4>
-                            <p class="text-[9px] text-gray-400">Certifié Longrich</p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
-    </section>
-
-    <footer class="bg-dark text-gray-400 py-10 px-4">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
-            <div>
-                <span class="font-extrabold text-white text-lg uppercase tracking-tighter">SUBLIME<span class="text-primary">HAVEN</span></span>
-                <p class="mt-4 leading-relaxed">Votre destination pour des soins dermo-cosmétiques authentiques et efficaces. Nous livrons le bien-être à votre porte.</p>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Liens Rapides</h4>
-                <ul class="space-y-2">
-                    <li><a href="visage.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins Visage</a></li>
-                    <li><a href="teint.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Soins du Corps</a></li>
-                    <li><a href="cheveux.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Traitement Cheveux</a></li>
-                    <li><a href="douleur.html" class="hover:text-primary transition flex items-center gap-2"><span>→</span> Anti-Douleurs</a></li>
-                    <li><a href="boutique.html" class="hover:text-primary transition flex items-center gap-2 text-accent font-bold"><span>★</span> La Boutique Complète</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contact</h4>
-                <p>Abidjan, Côte d'Ivoire</p>
-                <p class="mt-2">Tel: +225 07 00 00 00 00</p>
-            </div>
-        </div>
-        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-xs">
-            &copy; 2025 Sublime Haven. Distributeur Indépendant agréé Longrich. Tous droits réservés.
-        </div>
+    </div>
+    <footer class="bg-dark text-gray-400 py-8 text-center text-xs">
+        <p>&copy; 2025 Sublime Haven Abidjan. Distributeur Agréé.</p>
     </footer>
-
 </body>
 </html>

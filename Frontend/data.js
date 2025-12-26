@@ -266,7 +266,6 @@ const marketingConfig = {
 };
 
 
-
 // --- 2. CONFIGURATION LIVRAISON ---
 const deliveryZones = [
     { id: 'abidjan_nord', name: 'Abidjan Nord (Cocody, Riviera, Bingerville)', price: 1000 },

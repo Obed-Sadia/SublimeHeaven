@@ -7,12 +7,10 @@ if (typeof supabaseConfig !== 'undefined' && typeof window.supabase !== 'undefin
     console.error("⚠️ Supabase non configuré ou librairie manquante.");
 }
 
-
 // --- FONCTION DE TRACKING VISITEURS ---
 async function logVisit() {
     if (!supabaseClient) return;
 
-    // 1. Détection rudimentaire de l'OS et du Device
     const ua = navigator.userAgent.toLowerCase();
     let os = "Inconnu";
     let device = "Desktop";
@@ -22,12 +20,9 @@ async function logVisit() {
     else if (ua.includes("windows")) os = "Windows";
     else if (ua.includes("mac os")) os = "macOS";
 
-    // 2. Récupération de la source (UTM)
     const urlParams = new URLSearchParams(window.location.search);
     const source = urlParams.get('source') || sessionStorage.getItem('saved_source') || 'Direct/Organique';
 
-    // 3. Envoi discret à Supabase
-    // On ne bloque pas le site si ça échoue (fire and forget)
     supabaseClient.from('site_traffic').insert([{
         page_url: window.location.pathname,
         source: source,
@@ -38,10 +33,7 @@ async function logVisit() {
         if (error) console.warn("Erreur tracking:", error);
     });
 }
-
-// Lancer le tracking au chargement
 logVisit();
-
 
 // --- GESTION MARKETING (PIXELS) ---
 function initMarketing() {
@@ -77,7 +69,6 @@ function trackEvent(eventName, params = {}) {
         }
     }
 }
-
 initMarketing();
 
 // --- LOGIQUE ALPINE JS ---
@@ -91,27 +82,19 @@ document.addEventListener('alpine:init', () => {
         customer: { name: '', phone: '', city: '' },
         isSubmitting: false, 
         
-        // NOUVEAU : Source du trafic (UTM)
         trafficSource: 'Site Web (Organique)',
-
-        // VARIABLES PROMO
         promoInput: '',
         appliedPromo: null, 
         promoMessage: '',
         promoError: false,
 
-        // --- FONCTION DETECTION SOURCE (UTM) ---
         detectSource() {
             const urlParams = new URLSearchParams(window.location.search);
-            // On cherche ?source=... ou ?utm_source=...
             const source = urlParams.get('source') || urlParams.get('utm_source');
-            
             if (source) {
-                // Si trouvé, on met à jour et on sauvegarde
                 this.trafficSource = source;
                 sessionStorage.setItem('saved_source', source);
             } else {
-                // Sinon, on regarde si on l'avait déjà sauvegardé
                 const saved = sessionStorage.getItem('saved_source');
                 if (saved) this.trafficSource = saved;
             }
@@ -147,8 +130,10 @@ document.addEventListener('alpine:init', () => {
 
         formatPrice(price) { return new Intl.NumberFormat('fr-FR').format(price); },
 
-        generateWhatsappMsg(type, productTitle = null, productPrice = 0) {
-            let msg = `*NOUVELLE COMMANDE ${type}* 🚀\n___________________\n`;
+        // --- GÉNÉRATEUR MESSAGE WHATSAPP (MODIFIÉ AVEC REF) ---
+        generateWhatsappMsg(type, refCode, productTitle = null, productPrice = 0) {
+            let msg = `*NOUVELLE COMMANDE ${type}* (Ref: #${refCode}) 🚀\n`; 
+            msg += `___________________\n`;
             msg += `👤 *Nom:* ${this.customer.name}\n📞 *Tel:* ${this.customer.phone}\n📍 *Lieu:* ${this.customer.city}\n`;
             msg += `🚚 *Zone:* ${this.activeZone.name}\n___________________\n`;
             
@@ -170,7 +155,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         // --- FONCTION D'ENVOI (SUPABASE + WHATSAPP) ---
-        async sendOrder(msg, totalValue, mainProduct = null) {
+        async sendOrder(typeStr, totalValue, mainProduct = null) {
              if (!this.customer.name || !this.customer.phone) {
                 alert('⚠️ Merci d\'indiquer votre Nom et Numéro.');
                 return;
@@ -178,7 +163,10 @@ document.addEventListener('alpine:init', () => {
 
             this.isSubmitting = true;
 
-            // 1. Préparer les données pour Supabase
+            // 1. GÉNÉRER UNE RÉFÉRENCE UNIQUE (ex: 4892)
+            const refCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+            // 2. Préparer les données pour Supabase
             let orderRows = [];
             const timestamp = new Date().toISOString();
 
@@ -190,8 +178,9 @@ document.addEventListener('alpine:init', () => {
                     product_id: mainProduct.db_id,
                     quantity_sold: 1,
                     total_amount_cfa: mainProduct.price,
-                    marketing_source: this.trafficSource, // <--- SOURCE DYNAMIQUE
-                    status: "En attente Web"
+                    marketing_source: this.trafficSource,
+                    status: "En attente Web",
+                    order_ref: refCode // <--- ON AJOUTE LA REF ICI
                 });
             }
 
@@ -204,31 +193,37 @@ document.addEventListener('alpine:init', () => {
                         product_id: item.db_id,
                         quantity_sold: 1,
                         total_amount_cfa: item.price,
-                        marketing_source: this.trafficSource + " (Panier)", // <--- SOURCE DYNAMIQUE
-                        status: "En attente Web"
+                        marketing_source: this.trafficSource + " (Panier)",
+                        status: "En attente Web",
+                        order_ref: refCode // <--- MÊME REF POUR TOUT LE PANIER
                     });
                 }
             });
 
-            // 2. Envoyer à Supabase (si configuré)
+            // 3. Envoyer à Supabase
             if (supabaseClient && orderRows.length > 0) {
                 try {
                     const { error } = await supabaseClient.from('orders').insert(orderRows);
                     if (error) console.error("Erreur Supabase:", error);
-                    else console.log("Commande enregistrée dans le Cloud ! Source:", this.trafficSource);
+                    else console.log("Commande enregistrée avec Ref:", refCode);
                 } catch (e) {
                     console.error("Erreur connexion:", e);
                 }
             }
 
-            // 3. Tracking Pixel
+            // 4. Tracking Pixel
             trackEvent('Purchase', { 
                 value: totalValue, 
                 currency: marketingConfig.currency,
                 num_items: (this.cart.length + (mainProduct ? 1 : 0))
             });
 
-            // 4. Redirection WhatsApp
+            // 5. Générer le message et Rediriger WhatsApp
+            let productTitle = mainProduct ? mainProduct.badge : null;
+            let productPrice = mainProduct ? mainProduct.price : 0;
+            
+            // On passe le refCode pour qu'il soit écrit dans le message
+            let msg = this.generateWhatsappMsg(typeStr, refCode, productTitle, productPrice);
             let whatsappNumber = '+22506394798'; // Ton Numéro
             
             setTimeout(() => {
@@ -269,15 +264,15 @@ document.addEventListener('alpine:init', () => {
         },
 
         init() {
-            this.detectSource(); // Détecter d'où vient le client
+            this.detectSource(); 
             if (!this.product) return;
             trackEvent('ViewContent', { content_name: this.product.title, value: this.product.price, currency: marketingConfig.currency });
             setInterval(() => { this.activeHeroSlide = (this.activeHeroSlide + 1) % this.product.heroSlides.length; }, 3500);
         },
 
         submitOrder() {
-            let msg = this.generateWhatsappMsg("RITUEL", this.product.badge, this.product.price);
-            this.sendOrder(msg, this.total, this.product);
+            // On appelle sendOrder avec le TYPE (Rituel) au lieu du message
+            this.sendOrder("RITUEL", this.total, this.product);
         }
     }));
 
@@ -309,13 +304,13 @@ document.addEventListener('alpine:init', () => {
         },
 
         init() {
-            this.detectSource(); // Détecter la source aussi sur la page boutique
+            this.detectSource(); 
         },
 
         submitOrder() {
             if (this.cart.length === 0) { alert('⚠️ Panier vide'); return; }
-            let msg = this.generateWhatsappMsg("BOUTIQUE");
-            this.sendOrder(msg, this.total, null);
+            // On appelle sendOrder avec le TYPE (Boutique)
+            this.sendOrder("BOUTIQUE", this.total, null);
         }
     }));
 });
